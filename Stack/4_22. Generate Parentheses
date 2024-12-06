@@ -1,0 +1,74 @@
+
+22. Generate Parentheses
+URL: https://leetcode.com/problems/generate-parentheses/description/
+
+Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses.
+
+ 
+Example 1:
+Input: n = 3
+Output: ["((()))","(()())","(())()","()(())","()()()"]
+Example 2:
+Input: n = 1
+Output: ["()"]
+
+ 
+Constraints:
+
+	1 <= n <= 8
+
+
+
+class Solution {
+    public List<String> generateParenthesis(int n) {
+        List<String> result = new ArrayList<>();
+        backtrack(n,result,0,0,"");
+        return result;
+    }
+    public void backtrack(int n, List<String> result, int open, int close, String curr){
+        //Base case not to include more open braces
+        if(open>n){
+            return;
+        }
+        //Base case if matches add to the result.
+        if(open==n && open==close){
+            result.add(curr);
+            return;
+        }
+        if(open<n){
+            backtrack(n,result,open+1,close,curr+"(");
+        }
+        if(close<open){
+            backtrack(n,result,open,close+1,curr+")");
+        }
+
+    }
+}
+
+class Solution {
+    List<String> result;
+    public List<String> generateParenthesis(int n) {
+        result = new ArrayList<>();
+        helper(n,0,0,new char[2*n]);
+        return result;
+    }
+    private void helper(int left,int right,int idx,char[] arr){
+        if(left==0 && right==0){
+            result.add(new String(arr));
+            return;
+        } else if(left==0){
+            arr[idx]=')';
+            helper(left,right-1,idx+1,arr);
+            return;
+        } else if(right==0){
+            arr[idx]='(';
+            helper(left-1,right+1,idx+1,arr);
+            return;
+        }
+        arr[idx]='(';
+        helper(left-1,right+1,idx+1,arr);
+        arr[idx]=')';
+        helper(left,right-1,idx+1,arr);
+    }
+}
+
