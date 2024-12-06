@@ -1,0 +1,132 @@
+URL: https://leetcode.com/problems/kth-smallest-element-in-a-bst/description/
+
+230. Kth Smallest Element in a BST
+
+Given the root of a binary search tree, and an integer k, return the kth smallest value (1-indexed) of all the values of the nodes in the tree.
+
+ 
+Example 1:
+
+Input: root = [3,1,4,null,2], k = 1
+Output: 1
+
+Example 2:
+
+Input: root = [5,3,6,2,4,null,null,1], k = 3
+Output: 3
+
+ 
+Constraints:
+
+	The number of nodes in the tree is n.
+	1 <= k <= n <= 104
+	0 <= Node.val <= 104
+
+ 
+Follow up: If the BST is modified often (i.e., we can do insert and delete operations) and you need to find the kth smallest frequently, how would you optimize?
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    PriorityQueue<Integer> queue;
+    public int kthSmallest(TreeNode root, int k) {
+        queue = new PriorityQueue<>((a,b)->b-a);
+        smallest(root, k);
+        return queue.peek();
+    }
+    public void smallest(TreeNode root,int k){
+        if(root==null){
+            return;
+        }
+        queue.add(root.val);
+        while(queue.size()>k){
+            queue.poll();
+        }
+        if(root.left!=null){
+            smallest(root.left,k);
+        }
+        if(root.right!=null){
+            smallest(root.right,k);
+        }
+    } 
+}
+
+TC: O(n)
+SC: O(n)
+
+
+
+class Solution {
+    List<Integer> traversal = new ArrayList<>();
+    public int kthSmallest(TreeNode root, int k) {
+        traverse(root);
+        for(int i=0;i<traversal.size();i++){
+            if(i==k-1){
+                return traversal.get(k-1);
+            }
+        }
+        return -1;
+    }
+    private void traverse(TreeNode root){
+        if(root==null){
+            return;
+        }
+        traverse(root.left);
+        traversal.add(root.val);
+        traverse(root.right);
+    }
+
+}
+
+Tc : O(n)
+SC: O(n)
+
+
+
+class Solution {
+    public int kthSmallest(TreeNode root, int k) {
+        LinkedList<TreeNode> list = new LinkedList();
+        while(true){
+            while(root!=null){
+                list.push(root);
+                root = root.left;
+            }
+            root = list.pop();
+            if(--k==0){
+                return root.val;
+            }
+            root = root.right;
+        }
+    }
+}
+
+Summary:
+Time Complexity:
+
+O(h + k), where h is the height of the tree and k is the rank of the element.
+In a balanced BST, h = log(n), so the complexity becomes O(log(n) + k).
+In a skewed tree, h = n, making the worst-case complexity O(n + k).
+
+Worst Case:
+In the worst case, the algorithm could traverse down to the deepest leaf node and backtrack to visit up to k nodes. The time complexity depends on the height of the tree:
+
+Tree Height: h
+Traversing the leftmost path to the bottom costs O(h).
+After this, up to k nodes are processed.
+Total Complexity: O(h + k)
+
+Space Complexity:
+O(h) due to the stack used for traversal.
