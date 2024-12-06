@@ -57,3 +57,34 @@ class Solution {
 
 Time Complexity : O(n)
 Space Complexity : O(k)
+
+
+
+
+class Solution {
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        int n = nums.length;
+        Deque<Integer> deque = new LinkedList<>();
+        //List<Integer> res = new ArrayList<>();
+        for(int i=0;i<k;i++){
+            while(!deque.isEmpty() && nums[i]>=nums[deque.peekLast()]){
+                deque.pollLast();
+            }
+            deque.offerLast(i);
+        }
+        int[] res = new int[n-k+1];
+        for(int i=k;i<nums.length;i++){
+            res[i-k] = nums[deque.peekFirst()];
+            if(deque.peekFirst()==i-k){
+                deque.pollFirst();
+            }
+            while(!deque.isEmpty() && nums[i]>=nums[deque.peekLast()]){
+                deque.pollLast();
+            }
+            deque.offerLast(i);
+        }
+        res[n-k] = nums[deque.peekFirst()];
+        //return res.stream().mapToInt(i->i).toArray();
+        return res;
+    }
+}
