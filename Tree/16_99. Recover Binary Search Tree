@@ -1,0 +1,144 @@
+URL: https://leetcode.com/problems/recover-binary-search-tree/description/
+
+99. Recover Binary Search Tree
+
+You are given the root of a binary search tree (BST), where the values of exactly two nodes of the tree were swapped by mistake. Recover the tree without changing its structure.
+
+ 
+Example 1:
+
+Input: root = [1,3,null,null,2]
+Output: [3,1,null,null,2]
+Explanation: 3 cannot be a left child of 1 because 3 > 1. Swapping 1 and 3 makes the BST valid.
+
+Example 2:
+
+Input: root = [3,1,4,null,null,2]
+Output: [2,1,4,null,null,3]
+Explanation: 2 cannot be in the right subtree of 3 because 2 < 3. Swapping 2 and 3 makes the BST valid.
+
+ 
+Constraints:
+
+	The number of nodes in the tree is in the range [2, 1000].
+	-231 <= Node.val <= 231 - 1
+
+ 
+Follow up: A solution using O(n) space is pretty straight-forward. Could you devise a constant O(1) space solution?
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public void recoverTree(TreeNode root) {
+        List<Integer> nums = new ArrayList<>();
+        inorder(root,nums);
+        int[] swapped = findTwoSwapped(nums);
+        recover(root,2,swapped[0],swapped[1]);
+    }
+    private void inorder(TreeNode root,List<Integer> nums){
+        if(root==null){
+            return;
+        }
+        inorder(root.left,nums);
+        nums.add(root.val);
+        inorder(root.right,nums);
+    }
+    private int[] findTwoSwapped(List<Integer> nums){
+        int n = nums.size();
+        int x = -1,y=-1;
+        boolean swapped_first_occurance = false;
+        for(int i=0;i<n-1;i++){
+            if(nums.get(i+1)<nums.get(i)){
+                y = nums.get(i+1);
+                if(!swapped_first_occurance){
+                    x = nums.get(i);
+                    swapped_first_occurance = true;
+                } else {
+                    break;
+                }
+            }
+        }
+        return new int[]{x,y};
+    }
+    private void recover(TreeNode r,int count,int x,int y){
+        if(r!=null){
+            if(r.val==x||r.val==y){
+                r.val = r.val==x?y:x;
+                if(--count==0){
+                    return;
+                }
+            }
+            recover(r.left,count,x,y);
+            recover(r.right,count,x,y);
+        }
+    }
+}
+
+
+Approach 2: Iterative Inorder Traversal
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public void recoverTree(TreeNode root) {
+        Deque<TreeNode> stack = new ArrayDeque();
+        TreeNode x = null, y=null, pred=null;
+        while(!stack.isEmpty()||root!=null){
+            while(root!=null){
+                stack.add(root);
+                root = root.left;
+            }
+            root = stack.removeLast();
+            if(pred!=null && root.val<pred.val){
+                y = root;
+                if(x==null){
+                    x = pred;
+                } else {
+                    break;
+                }
+            }
+            pred = root;
+            root = root.right;
+        }
+        swap(x,y);
+    }
+    public void swap(TreeNode a,TreeNode b){
+        int temp = a.val;
+        a.val = b.val;
+        b.val = temp;
+    }
+}
+
+Complexity Analysis
+
+Time complexity: O(N) in the worst case when one of the swapped nodes is a rightmost leaf.
+
+Space complexity : up to O(N) to keep the stack in the worst case when the tree is completely lean.
+
