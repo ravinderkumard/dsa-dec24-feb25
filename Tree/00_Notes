@@ -1,0 +1,53 @@
+
+Problem distribution:
+  1. DFS Depth First Search
+      Recursively or iteratively traverse a tree using Preorder, Inorder, Postorder.
+      Uasage: Tree Traversal, Checking properties(e.g. height, symmetry), or manipulating nodes.
+
+  2. BFS/Level Order Traversl  
+      Traverse level-by-level using a queue.
+      Usage: Problem involving levels, finding the shortest path or bottom-up traversal.
+
+  3. Recursive Divide and Conquer
+      Solve a problem by dividint it into smaller subproblems and combining results
+      Usage: Calculating height, diameter or validating BST.
+
+  4. Two Pointer Technique
+      User pointers or indices for problem like checking symmetry for finding lowest common ancestor
+      Usage: Check if a tree is symmetric
+
+  5. Backtracking
+      Explore all path(like from root to leaves) and revert changes when backtracking.
+      Usage: Find all paths that sum to a given value or print root to leaf path.
+
+  6. Dynamic Programming on Trees
+      Use memoization to store results of subtrees to avoid recomputation
+      Usage: Problems like finding the maximum sum of non-adjacent nodes.
+
+  7. Morris Traversal(Iterative Inorder)
+      Perform in order traversal without using recursion or stack.
+      Usage: Space-efficient traversal
+
+  8. Binary Search Tree Properties
+      Utilize properties like left<root<right for search or insert operations
+      Usage: Search, insert, validate BST, find kth smallest/largest
+
+  9. Top-Down approach
+      Pass state or additional information(like path sum) down the tree.
+      Usage: Validate sum of nodes in root-to-leaf paths.
+
+  10. Flatten or Modify Tree
+        Convert a tree into another structure(e.g. linked list or array)
+        Usage: Flatten a binary tree to linked list in-place
+
+
+
+  Practice Problems
+    1. Tree Traversal: Preorder, Inorder, Postorder
+    2.  Symmetric Tree: LeetCode #101
+    3.  Path sum: LC: #112,113
+    4.  Lowest Common Ancestor: LC: #236
+    5.  Diameter of Binary Tree: LC: #543
+    6.  Serialize and Deserialize Binary Tree: LC: #297
+    7.  Kth Smallest Element in BST: LC: #230
+    8.  Flatten Binary Tree: LC: 114
