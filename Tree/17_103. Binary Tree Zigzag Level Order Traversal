@@ -1,0 +1,128 @@
+103. Binary Tree Zigzag Level Order Traversal
+(Should solve this as Level order using queue)
+URL: https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/description/
+
+
+
+Given the root of a binary tree, return the zigzag level order traversal of its nodes' values. (i.e., from left to right, then right to left for the next level and alternate between).
+
+ 
+Example 1:
+
+Input: root = [3,9,20,null,null,15,7]
+Output: [[3],[20,9],[15,7]]
+
+Example 2:
+
+Input: root = [1]
+Output: [[1]]
+
+Example 3:
+
+Input: root = []
+Output: []
+
+ 
+Constraints:
+
+	The number of nodes in the tree is in the range [0, 2000].
+	-100 <= Node.val <= 100
+
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        List<List<Integer>> result = new ArrayList<>();
+        Queue<TreeNode> que = new LinkedList<>();
+        if(root==null){
+            return result;
+        }
+        boolean forward = true;
+        que.add(root);
+        while(!que.isEmpty()){
+            int size = que.size();
+            LinkedList<Integer> currList = new LinkedList<>();
+            while(size>0){
+                size--;
+                TreeNode curr = que.poll();
+                if(forward){
+                    currList.offerLast(curr.val);
+                } else {
+                    currList.offerFirst(curr.val);
+                }
+                if(curr.left!=null){
+                    que.add(curr.left);
+                }
+                if(curr.right!=null){
+                    que.add(curr.right);
+                }
+            }
+            result.add(new ArrayList<>(currList));
+            forward = !forward;
+        }
+        return result;
+    }
+}
+
+
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        List<List<Integer>> result = new ArrayList<>();
+        if(root==null){
+            return result;
+        }
+        dfs(root,0,result);
+        return result;
+    }
+    private void dfs(TreeNode root,int level,List<List<Integer>> result){
+        if(level>=result.size()){
+            LinkedList<Integer> newLevel = new LinkedList();
+            newLevel.add(root.val);
+            result.add(newLevel);
+        } else {
+            if(level%2==0){
+                result.get(level).add(root.val);
+            } else {
+                result.get(level).addFirst(root.val);
+            }
+        }
+        if(root.left!=null){
+            dfs(root.left,level+1,result);
+        }
+        if(root.right!=null){
+            dfs(root.right,level+1,result);
+        }
+    }
+}
