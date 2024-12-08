@@ -96,3 +96,35 @@ Complexity Analysis
 * Time complexity: O(N) since one has to visit each node.
 * Space complexity: up to O(N) to keep the queues. 
 
+
+class Result {
+    int depth;
+    int sum;
+    Result(int depth,int sum){
+        this.depth = depth;
+        this.sum = sum;
+    }
+ }
+class Solution {
+    public int deepestLeavesSum(TreeNode root) {
+        Result r = inorder(root,1);
+        return r.sum;
+    }
+    private Result inorder(TreeNode root, int depth){
+        if(root==null){
+            return null;
+        }
+        Result lResult = inorder(root.left,depth+1);
+        Result rResult = inorder(root.right,depth+1);
+        if(lResult==null && rResult==null){
+            return new Result(depth,root.val);
+        } else if(lResult!=null && rResult!=null){
+            int maxDepth = Math.max(lResult.depth,rResult.depth);
+            Result r = new Result(maxDepth,0);
+            if(maxDepth==lResult.depth) r.sum+=lResult.sum;
+            if(maxDepth==rResult.depth) r.sum+=rResult.sum;
+            return r;
+        } else if(lResult!=null) return lResult;
+        else return rResult;
+    }
+}
