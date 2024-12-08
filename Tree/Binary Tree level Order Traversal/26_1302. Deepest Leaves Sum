@@ -65,3 +65,34 @@ class Solution {
         return dfs(root.left,depth,level+1,sum)+dfs(root.right,depth,level+1,sum);
     }
 }
+
+Solution 3: BFS Optimised
+class Solution {
+    public int deepestLeavesSum(TreeNode root) {
+        ArrayDeque<TreeNode> nextLevel = new ArrayDeque<>();
+        ArrayDeque<TreeNode> currLevel = new ArrayDeque<>();
+        nextLevel.offer(root);
+        while(!nextLevel.isEmpty()){
+            currLevel = nextLevel.clone();
+            nextLevel.clear();
+            for(TreeNode node:currLevel){
+                if(node.left!=null){
+                    nextLevel.add(node.left);
+                }
+                if(node.right!=null){
+                    nextLevel.offer(node.right);
+                }
+            }
+        }
+        int sum = 0;
+        for(TreeNode node: currLevel){
+            sum+=node.val;
+        }
+        return sum;
+    }
+}
+
+Complexity Analysis
+* Time complexity: O(N) since one has to visit each node.
+* Space complexity: up to O(N) to keep the queues. 
+
