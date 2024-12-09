@@ -31,11 +31,17 @@ class Solution {
         int count=0,currSum=0;
         Map<Long,Integer> prefixSum = new HashMap<>();
         for(int num:nums){
+	//Current Sum
             currSum+=num;
+		
+	// Continuous subarray starts from the beginning of the array
             if(currSum==k){
                 count++;
             }
+	// The number of times the curr_sum − k has occurred already, determines the number of times a subarray with sum k has occurred up to the current index
             count+=prefixSum.getOrDefault(currSum-k, 0);
+
+	//Add the current sum
             prefixSum.put(currSum,prefixSum.getOrDefault(currSum, 0)+1);
         }
         return count;
