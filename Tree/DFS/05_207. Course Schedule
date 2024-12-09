@@ -1,0 +1,181 @@
+
+05_207. Course Schedule
+
+Topological Sort
+
+Medium
+
+URL: https://leetcode.com/problems/course-schedule/
+
+There are a total of numCourses courses you have to take, labeled from 0 to numCourses - 1. You are given an array prerequisites where prerequisites[i] = [ai, bi] indicates that you must take course bi first if you want to take course ai.
+
+	For example, the pair [0, 1], indicates that to take course 0 you have to first take course 1.
+
+Return true if you can finish all courses. Otherwise, return false.
+
+ 
+Example 1:
+
+Input: numCourses = 2, prerequisites = [[1,0]]
+Output: true
+Explanation: There are a total of 2 courses to take. 
+To take course 1 you should have finished course 0. So it is possible.
+
+Example 2:
+
+Input: numCourses = 2, prerequisites = [[1,0],[0,1]]
+Output: false
+Explanation: There are a total of 2 courses to take. 
+To take course 1 you should have finished course 0, and to take course 0 you should also have finished course 1. So it is impossible.
+
+ 
+Constraints:
+
+	1 <= numCourses <= 2000
+	0 <= prerequisites.length <= 5000
+	prerequisites[i].length == 2
+	0 <= ai, bi < numCourses
+	All the pairs prerequisites[i] are unique.
+
+
+
+class Solution {
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        Map<Integer,List<Integer>> preMap = new HashMap();
+        for(int i=0;i<numCourses;i++){
+            preMap.put(i,new ArrayList<>());
+        }
+        Set<Integer> visited = new HashSet<>();
+        for(int i=0;i<prerequisites.length;i++){
+            preMap.get(prerequisites[i][0]).add(prerequisites[i][1]);
+        }
+
+        for(int course=0;course<numCourses;course++){
+            if(!dfs(course,preMap,visited)){
+                return false;
+            }
+        }
+        return true;
+    }
+    public boolean dfs(int course,Map<Integer,List<Integer>> preMap, Set<Integer> visited){
+        if(visited.contains(course)){
+            return false;
+        }
+        if(preMap.get(course).isEmpty()){
+            return true;
+        }
+        visited.add(course);
+        for(int pre:preMap.get(course)){
+            if(!dfs(pre,preMap,visited)){
+                return false;
+            }
+        }
+        visited.remove(course);
+        preMap.put(course,new ArrayList<>());
+        return true;
+    }
+}
+
+Complexity Analysis
+Here, n be the number of courses and m be the size of prerequisites.
+* Time complexity: O(m+n)
+    * Initializing adj takes O(m) time as we go through all the edges.
+    * Initializing the visit and inStack arrays take O(n) time each.
+    * The dfs function handles each node once, which takes O(n) time in total. From each node, we iterate over all the outgoing edges, which further takes O(m) time to iterate over all the edges as there are a total of m edges.
+* Space complexity: O(m+n)
+    * The adj arrays takes O(m) space.
+    * The visit and inStack arrays take O(n) space each.
+    * The recursion call stack used by dfs can have no more than n elements in the worst-case scenario. It would take up O(n) space in that case.
+
+
+
+
+
+
+class Solution {
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        Map<Integer,List<Integer>> adjList = new HashMap<>();
+        int[] indegree = new int[numCourses];
+        int[] topologicalOrder = new int[numCourses];
+        for(int i=0;i<numCourses;i++){
+            adjList.put(i,new ArrayList<>());
+        }
+        for(int[] pre:prerequisites){
+            int dest = pre[0];
+            int src = pre[1];
+            adjList.get(src).add(dest);
+            indegree[dest] +=1;
+        }
+        Queue<Integer> q = new LinkedList<Integer>();
+        for(int i=0;i<numCourses;i++){
+            if(indegree[i]==0){
+                q.add(i);
+            }
+        }
+        int count = 0;
+        while(!q.isEmpty()){
+            int course = q.poll();
+            count++;
+            for(int neighbour:adjList.getOrDefault(course,new ArrayList<>())){
+                indegree[neighbour]--;
+                if(indegree[neighbour]==0){
+                    q.add(neighbour);
+                }
+            }
+        }
+        return count==numCourses;
+    }
+}
+
+Complexity Analysis
+Here, n be the number of courses and m be the size of prerequisites.
+* Time complexity: O(m+n)
+    * Initializing the adj list takes O(m) time as we go through all the edges. The indegree array take O(n) time.
+    * Each queue operation takes O(1) time, and a single node will be pushed once, leading to O(n) operations for n nodes. We iterate over the neighbors of each node that is popped out of the queue iterating over all the edges once. Since there are total of m edges, it would take O(m) time to iterate over the edges.
+* Space complexity: O(m+n)
+    * The adj arrays takes O(m) space. The indegree array takes O(n) space.
+    * The queue can have no more than n elements in the worst-case scenario. It would take up O(n) space in that case.
+
+
+
+class Solution {
+
+    private boolean dfs(List<List<Integer>> graph, int current,boolean[] visiting, boolean[] visited){
+        visiting[current] = true;
+
+        for(int neighbour : graph.get(current)){
+            if(visiting[neighbour] == true) return false;
+
+            if(!visited[neighbour]){
+                if(!dfs(graph,neighbour,visiting,visited))
+                    return false;
+            }
+        }
+
+        visiting[current] = false;
+        visited[current] = true;
+        return true;
+    }
+    public boolean canFinish(int n, int[][] prerequisites) {
+        List<List<Integer>> graph = new ArrayList<>();
+
+        for(int i=0;i<n;i++){
+            graph.add(new ArrayList<>());
+        }
+
+        for(int[] prerequisite : prerequisites)
+            graph.get(prerequisite[0]).add(prerequisite[1]);
+
+        boolean[] visiting = new boolean[n];
+        boolean[] visited = new boolean[n];
+
+        for(int i=0;i<n;i++){
+            if(!visited[i]){
+                if(!dfs(graph,i,visiting,visited))
+                    return false;
+            }
+        }
+
+        return true;
+    }
+}
