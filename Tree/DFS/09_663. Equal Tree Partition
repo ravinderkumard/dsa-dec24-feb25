@@ -1,0 +1,113 @@
+663. Equal Tree Partition
+URL: https://leetcode.com/problems/equal-tree-partition/description/
+
+
+
+Given the root of a binary tree, return true if you can partition the tree into two trees with equal sums of values after removing exactly one edge on the original tree.
+
+ 
+Example 1:
+
+Input: root = [5,10,10,null,null,2,3]
+Output: true
+
+Example 2:
+
+Input: root = [1,2,10,null,null,2,20]
+Output: false
+Explanation: You cannot split the tree into two trees with equal sums after removing exactly one edge on the tree.
+
+ 
+Constraints:
+
+	The number of nodes in the tree is in the range [1, 104].
+	-105 <= Node.val <= 105
+
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    Stack<Integer> seen;
+    public boolean checkEqualTree(TreeNode root) {
+        seen = new Stack<>();
+        int total = sum(root);
+        seen.pop();
+        if(total%2==0){
+            for(int s :seen){
+                if(s==total/2){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    public int sum(TreeNode node){
+        if(node==null){
+            return 0;
+        }
+        seen.push(sum(node.left)+sum(node.right)+node.val);
+        return seen.peek();
+    }
+}
+
+
+
+
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    boolean found = false;
+    public boolean checkEqualTree(TreeNode root) {
+        int totalSum = helper(root,0,root);
+
+        if(totalSum%2!=0) return false;
+        found = false;
+        int value = helper(root,totalSum,root);
+
+        return found;
+    }
+
+    private int helper(TreeNode root, int sum, TreeNode origRoot){
+        if(root==null){
+            return 0;
+        }
+        int left = helper(root.left,sum,origRoot);
+        int right = helper(root.right,sum,origRoot);
+        int subRootSum = left+right+root.val;
+
+        if(root!=origRoot && subRootSum == sum / 2){
+            found = true;
+        }
+
+        return subRootSum;
+    }
+}
