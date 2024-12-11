@@ -1,0 +1,207 @@
+1644. Lowest Common Ancestor of a Binary Tree II
+
+Medium
+
+
+Given the root of a binary tree, return the lowest common ancestor (LCA) of two given nodes, p and q. If either node p or q does not exist in the tree, return null. All values of the nodes in the tree are unique.
+According to the definition of LCA on Wikipedia: "The lowest common ancestor of two nodes p and q in a binary tree T is the lowest node that has both p and q as descendants (where we allow a node to be a descendant of itself)". A descendant of a node x is a node y that is on the path from node x to some leaf node.
+ 
+Example 1:
+￼
+Input: root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 1
+Output: 3
+Explanation: The LCA of nodes 5 and 1 is 3.
+Example 2:
+￼
+Input: root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 4
+Output: 5
+Explanation: The LCA of nodes 5 and 4 is 5. A node can be a descendant of itself according to the definition of LCA.
+Example 3:
+￼
+Input: root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 10
+Output: null
+Explanation: Node 10 does not exist in the tree, so return null.
+ 
+Constraints:
+* The number of nodes in the tree is in the range [1, 104].
+* -109 <= Node.val <= 109
+* All Node.val are unique.
+* p != q
+ 
+Follow up: Can you find the LCA traversing the tree, without checking nodes existence?
+
+Solution 1 :
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if(root==null){
+            return root;
+        }
+        TreeNode leftHalf = lowestCommonAncestor(root.left,p,q);
+        TreeNode rightHalf = lowestCommonAncestor(root.right,p,q);
+        boolean findP = find(root,p);
+        boolean findQ = find(root,q);
+        if(findP==false||findQ==false){
+            return null;
+        }
+        if(leftHalf!=null){
+            return leftHalf;
+        } else if(rightHalf!=null){
+            return rightHalf;
+        } else if(leftHalf==null && rightHalf==null){
+            return root;
+        } else return null;
+    }
+    private boolean find(TreeNode root, TreeNode p){
+        if(root==null){
+            return false;
+        }
+        if(root==p){
+            return true;
+        }
+        return find(root.left,p)||find(root.right,p);
+    }
+}
+
+Solution 2: TC : O(n); SC : O(n)
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if(root==null){
+            return root;
+        }
+       TreeNode ans = LCA(root,p,q);
+       if(ans==p){
+           return dfs(p,q)?p:null;
+       } else if(ans==q){
+           return dfs(q,p)?q:null;
+       }
+       return ans;
+    }
+    private boolean dfs(TreeNode node1,TreeNode node2){
+        if(node1==node2){
+            return true;
+        }
+        if(node1==null){
+            return false;
+        }
+        return dfs(node1.left,node2) || dfs(node1.right,node2);
+    }
+    private TreeNode LCA(TreeNode node, TreeNode p, TreeNode q){
+        if(node==null||node==p||node==q){
+            return node;
+        }
+        TreeNode left = LCA(node.left,p,q);
+        TreeNode right = LCA(node.right,p,q);
+        if(left!=null&&right!=null){
+            return node;
+        } else if(left!=null){
+            return left;
+        } else return right;
+    }
+}
+
+
+Solution 3: TC : O(n); SC : O(n)
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    boolean nodesFound = false;
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        TreeNode ans = dfs(root,p,q);
+        return nodesFound?ans:null;
+    }
+    private TreeNode dfs(TreeNode node,TreeNode p, TreeNode q){
+        if(node==null){
+            return null;
+        }
+        TreeNode left = dfs(node.left,p,q);
+        TreeNode right = dfs(node.right,p,q);
+        int conditions=0;
+        if(node==p||node==q){
+            conditions++;
+        }
+        if(left!=null){
+            conditions++;
+        }
+        if(right!=null){
+            conditions++;
+        }
+        if(conditions==2){
+            nodesFound=true;
+        }
+        if((left!=null&&right!=null)||node==p||node==q){
+            return node;
+        }
+        return left!=null?left:right;
+    }
+}
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    boolean pFound = false;
+    boolean qFound = false;
+
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        TreeNode lca = find(root,p,q);
+        if(pFound && qFound){
+            return lca;
+        }    
+        return null;
+    }
+    private TreeNode find(TreeNode node,TreeNode p,TreeNode q){
+        if(node==null){
+            return null;
+        }
+        TreeNode leftLCA = find(node.left,p,q);
+        TreeNode rightLCA = find(node.right,p,q);
+        if(node==p){
+            pFound = true;
+            return node;
+        }
+        if(node==q){
+            qFound = true;
+            return node;
+        }
+        if(leftLCA==null){
+            return rightLCA;
+        }
+        if(rightLCA==null){
+            return leftLCA;
+        }
+        return node;
+    }
+}
