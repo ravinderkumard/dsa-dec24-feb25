@@ -1,0 +1,78 @@
+257. Binary Tree Paths
+
+Easy
+
+
+5.8K
+
+248
+
+
+
+Companies
+Given the root of a binary tree, return all root-to-leaf paths in any order.
+A leaf is a node with no children.
+ 
+Example 1:
+￼
+Input: root = [1,2,3,null,5]
+Output: ["1->2->5","1->3"]
+Example 2:
+Input: root = [1]
+Output: ["1"]
+ 
+Constraints:
+* The number of nodes in the tree is in the range [1, 100].
+* -100 <= Node.val <= 100
+* 
+
+
+class Solution {
+    List<String> list = new ArrayList<>();
+    public List<String> binaryTreePaths(TreeNode root) {
+        dfs(root,"");
+        return list;
+    }
+    public void dfs(TreeNode root,String result){
+        if(root==null){
+            return;
+        }
+        if(!"".equals(result)){
+            result=result+"->";
+        }
+        if(root.left==null&&root.right==null){
+            list.add(result+root.val);
+        }
+        dfs(root.left,result+root.val);
+        dfs(root.right,result+root.val);
+    }
+}
+
+
+
+class Solution {
+    public List<String> binaryTreePaths(TreeNode root) {
+        return dfs(root,new ArrayList<String>(),new StringBuilder());
+    }
+    private List<String> dfs(TreeNode root,List<String> list,StringBuilder b){
+        if(root==null){
+            return list;
+        }
+        if(b.isEmpty()){
+            b.append(root.val);
+        } else {
+            b.append("->").append(root.val);
+        }
+        if(root.left==null && root.right==null){
+            list.add(b.toString());
+            return list;
+        }
+        if(root.left!=null){
+            dfs(root.left,list,new StringBuilder(b));
+        }
+        if(root.right!=null){
+            dfs(root.right,list,new StringBuilder(b));
+        }
+        return list;
+    }
+}
