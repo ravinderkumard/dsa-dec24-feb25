@@ -1,0 +1,164 @@
+
+08_269. Alien Dictionary
+
+URL: https://leetcode.com/problems/alien-dictionary/description/
+
+There is a new alien language that uses the English alphabet. However, the order of the letters is unknown to you.
+
+You are given a list of strings words from the alien language's dictionary. Now it is claimed that the strings in words are sorted lexicographically by the rules of this new language.
+
+If this claim is incorrect, and the given arrangement of string in words cannot correspond to any order of letters, return "".
+
+Otherwise, return a string of the unique letters in the new alien language sorted in lexicographically increasing order by the new language's rules. If there are multiple solutions, return any of them.
+
+ 
+Example 1:
+
+Input: words = ["wrt","wrf","er","ett","rftt"]
+Output: "wertf"
+
+Example 2:
+
+Input: words = ["z","x"]
+Output: "zx"
+
+Example 3:
+
+Input: words = ["z","x","z"]
+Output: ""
+Explanation: The order is invalid, so return "".
+
+ 
+Constraints:
+
+	1 <= words.length <= 100
+	1 <= words[i].length <= 100
+	words[i] consists of only lowercase English letters.
+
+Notes:
+1. Create a reversed Agency List for character and its link in wordList
+2. Run a DFS on the keySet
+3. If record not exist return  blank string.
+
+In DFS
+	1. check if char already seen then return status of character true of false
+	2. If not seen mark it as seen
+	3. Iterate ajdacent element of character.
+	4. Run DFS on each character.
+	5. Add passed character to strinbuilder
+	6. Return true.
+
+
+class Solution {
+    private Map<Character,List<Character>> reverseAdjList = new HashMap<>();
+    private Map<Character,Boolean> seen = new HashMap<>();
+    private StringBuilder output = new StringBuilder();
+
+    public String alienOrder(String[] words) {
+	//Step 0: Put all unique letters into reversedAdjList as keys.
+        for(String word:words){
+            for(char c:word.toCharArray()){
+                reverseAdjList.putIfAbsent(c,new ArrayList<>());
+            }
+        }    
+	//Step 1: Find all ages and add reverse edges to reversed List
+        for(int i=0;i<words.length-1;i++){
+            String word1 = words[i];
+            String word2 = words[i+1];
+		//Check that word2 is not a prefix of word1;
+            if(word1.length()>word2.length() && word1.startsWith(word2)){
+                return "";
+            }
+	//Find the first non match and insert the corresponding relation
+            for(int j=0;j<Math.min(word1.length(),word2.length());j++){
+                if(word1.charAt(j)!=word2.charAt(j)){
+                    reverseAdjList.get(word2.charAt(j)).add(word1.charAt(j));
+                    break;
+                }
+            }
+        }
+//	Step 2: DFS to build up the output list.
+        for(Character c:reverseAdjList.keySet()){
+            boolean result = dfs(c);
+            if(!result) return "";
+        }
+
+        return output.toString();
+    }
+// Return true if and only if no cycle detected.
+    private boolean dfs(Character c){
+        if(seen.containsKey(c)){
+            return seen.get(c);
+        }
+        seen.put(c,false);
+        for(Character next : reverseAdjList.get(c)){
+            boolean result = dfs(next);
+            if(!result) return false;
+        }
+        seen.put(c,true);
+        output.append(c);
+        return true;
+    }
+}
+
+Complexity Analysis
+* Time complexity : O(C). Building the adjacency list has a time complexity of O(C) for the same reason as in Approach 1. Again, like in Approach 1, we traverse every "edge", but this time we're using depth-first-search.
+* Space complexity : O(1) or O(U+min(U^2,N)). Like in Approach 1, we build an adjacency list. Even though this one is a reversed adjacency list, it still contains the same number of relations.
+
+
+
+
+class Solution {
+    public String alienOrder(String[] words) {
+        Map<Character, List<Character>> adjList = new HashMap<>();
+        Map<Character,Integer> counts = new HashMap<>();
+        for(String word:words){
+            for(char ch:word.toCharArray()){
+                adjList.put(ch,new ArrayList<>());
+                counts.put(ch,0);
+            }
+        }
+        for(int i=0;i<words.length-1;i++){
+            String word1 = words[i];
+            String word2 = words[i+1];
+            if(word1.length()>word2.length() && word1.startsWith(word2)){
+                return "";
+            }
+            for(int j=0;j<Math.min(word1.length(),word2.length());j++){
+                if(word1.charAt(j)!=word2.charAt(j)){
+                    adjList.get(word1.charAt(j)).add(word2.charAt(j));
+                    counts.put(word2.charAt(j),counts.get(word2.charAt(j))+1);
+                    break;
+                }
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        Queue<Character> queue = new LinkedList<>();
+        for(Character c:counts.keySet()){
+            if(counts.get(c).equals(0)){
+                queue.add(c);
+            }
+        }
+        while(!queue.isEmpty()){
+            Character c = queue.remove();
+            sb.append(c);
+            for(Character next:adjList.get(c)){
+                counts.put(next,counts.get(next)-1);
+                if(counts.get(next).equals(0)){
+                    queue.add(next);
+                }
+            }
+        }
+        if(sb.length()<counts.size()){
+            return "";
+        }
+        return sb.toString();
+    }
+}
+
+Let N be the total number of strings in the input list.
+Let C be the total length of all the words in the input list, added together.
+Let U be the total number of unique letters in the alien alphabet. While this is limited to 26 in the question description, we'll still look at how it would impact the complexity if it was not limited (as this could potentially be a follow-up question).
+
+Time complexity : O(C).
+Space complexity : O(1) or O(U+min(U^2,N)).
