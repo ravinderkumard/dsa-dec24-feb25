@@ -1,0 +1,72 @@
+Problem:
+Count the number of subtrees in a binary tree such that all the nodes in those subtrees have even values.
+
+Approach:
+Use post-order traversal (DFS) to recursively check if the current subtree meets the condition.
+If the current subtree satisfies the condition (all nodes have even values), count it as valid.
+Return the count.
+
+
+class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+
+    TreeNode(int val) {
+        this.val = val;
+        this.left = null;
+        this.right = null;
+    }
+}
+
+public class CountEvenSubtrees {
+
+    static class Result {
+        int count = 0;  // To keep track of valid subtrees
+    }
+
+    public static int countEvenSubtrees(TreeNode root) {
+        Result result = new Result();
+        isEvenSubtree(root, result);
+        return result.count;
+    }
+
+    private static boolean isEvenSubtree(TreeNode node, Result result) {
+        if (node == null) {
+            return true; // Null nodes are trivially even
+        }
+
+        // Recursively check the left and right subtrees
+        boolean isLeftEven = isEvenSubtree(node.left, result);
+        boolean isRightEven = isEvenSubtree(node.right, result);
+
+        // Check if the current node is even and both subtrees are even
+        if (isLeftEven && isRightEven && node.val % 2 == 0) {
+            result.count++; // Increment count for a valid subtree
+            return true;    // Current subtree is even
+        }
+
+        return false; // Current subtree is not even
+    }
+
+    public static void main(String[] args) {
+        // Example Tree
+        /*
+                  4
+                /   \
+               2     6
+              / \   / \
+             8   10 12  14
+        */
+        TreeNode root = new TreeNode(4);
+        root.left = new TreeNode(2);
+        root.right = new TreeNode(6);
+        root.left.left = new TreeNode(8);
+        root.left.right = new TreeNode(10);
+        root.right.left = new TreeNode(12);
+        root.right.right = new TreeNode(14);
+
+        int result = countEvenSubtrees(root);
+        System.out.println("Number of subtrees with all even nodes: " + result);
+    }
+}
