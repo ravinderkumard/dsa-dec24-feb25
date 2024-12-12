@@ -186,3 +186,6 @@ class Solution {
         }
     }
 }
+
+
+Notes: compare current value of node with max so far if value is greater increase good nodes count, and keep going inside to update the max so far, 
