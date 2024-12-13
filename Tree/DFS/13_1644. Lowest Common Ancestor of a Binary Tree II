@@ -30,6 +30,19 @@ Constraints:
  
 Follow up: Can you find the LCA traversing the tree, without checking nodes existence?
 
+
+*************************************************************************************
+    NOTES:
+        1. Question talk about finding LCA, but here we have to check existance of the nodes as well
+        2. For that 1st we try to find if P and Q exist in tree using DFS, if both doesnot exist return null.
+        3. Then we have to check for LCA for right and Left if both are null return root.
+        4. Otherwise return the left or right value as values are unique so they can be either on left side or right side.
+        
+
+*************************************************************************************
+
+
+
 Solution 1 :
 /**
  * Definition for a binary tree node.
@@ -70,6 +83,54 @@ class Solution {
         return find(root.left,p)||find(root.right,p);
     }
 }
+
+Solution 1: other ways
+
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if(root==null){
+            return root;
+        }
+        
+        boolean findNodeP = find(root,p);
+        boolean findNodeQ = find(root,q);
+        if(!findNodeP || !findNodeQ){
+            return null;
+        }
+        TreeNode left = lowestCommonAncestor(root.left, p, q);
+        TreeNode right = lowestCommonAncestor(root.right, p, q);
+        if(left==null && right==null){
+            return root;
+        } else if(left!=null){
+            return left;
+        } else if(right!=null){
+            return right;
+        } else {
+            return null;
+        }
+    }
+    private boolean find(TreeNode root,TreeNode p){
+        if(root==null){
+            return false;
+        }
+        if(root==p){
+            return true;
+        }
+        return find(root.left,p) || find(root.right,p);
+    }
+}
+
+
+*************************************************************************************
+    NOTES:
+        1. Question talk about finding LCA, but here we have to check existance of the nodes as well
+        2. Find LCA using dfs.
+        3. Check if lca is equal to P or Q, if so try to find Q in P and P in Q return null if not found.
+        5. return answer if anser is not qual to p or q.
+        
+
+*************************************************************************************
+
 
 Solution 2: TC : O(n); SC : O(n)
 /**
@@ -118,6 +179,24 @@ class Solution {
 }
 
 
+*************************************************************************************
+    NOTES:
+        1. Question talk about finding LCA, but here we have to check existance of the nodes as well
+        2. we have 2 node P and Q to verify if the exist and if so find the LCA.
+        3. First we define DFS for left and right nodes with P and Q.
+        4. Define coindition variable as 0.
+        5. Now if node is equal to either P or Q we will increase condition by 1.
+        6. if left is not null, coindition will be increamented.
+        7. If right is not null condition will be incremented.
+        8. If condition ==2, we can consider that P and Q both are available.
+        9. now if left and right both are not null or root is either P or Q return root.
+        8 other wise return left or right.
+        
+
+*************************************************************************************
+
+
+
 Solution 3: TC : O(n); SC : O(n)
 
 /**
@@ -160,6 +239,23 @@ class Solution {
         return left!=null?left:right;
     }
 }
+
+
+*************************************************************************************
+    NOTES:
+        1. Question talk about finding LCA, but here we have to check existance of the nodes as well
+        2. we have 2 node P and Q to verify if the exist and if so find the LCA.
+        3. First we define DFS for left and right nodes with P and Q.
+        4. Define coindition variable as 0.
+        5. Now if node is equal to either P or Q we will increase condition by 1.
+        6. if left is not null, coindition will be increamented.
+        7. If right is not null condition will be incremented.
+        8. If condition ==2, we can consider that P and Q both are available.
+        9. now if left and right both are not null or root is either P or Q return root.
+        8 other wise return left or right.
+        
+
+*************************************************************************************
 
 
 /**
