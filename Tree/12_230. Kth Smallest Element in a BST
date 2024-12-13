@@ -130,3 +130,26 @@ Total Complexity: O(h + k)
 
 Space Complexity:
 O(h) due to the stack used for traversal.
+
+
+
+
+class Solution {
+    public int kthSmallest(TreeNode root, int k) {
+        ArrayDeque<TreeNode> list = new ArrayDeque<>();
+        while(true){
+            while(root!=null){
+                list.push(root);
+                root = root.left;
+            }
+            root = list.pop();
+            if(--k==0){
+                return root.val;
+            }
+            root = root.right;
+        }
+    }
+}
+
+Notes: As ArrayDeque perform faster than stack.
+Add left elements to the queue and it is a BST to element will be ordered.
