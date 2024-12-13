@@ -35,6 +35,17 @@ Constraints:
 	The number of nodes in the binary tree is in the range [1, 10^5].
 	Each node's value is between [-10^4, 10^4].
 
+
+******************************************************************************************************************************
+	NOTES:
+	Here we are talking about node in the path must have value greater than pervious one.
+	1. Perform DFS.
+	2. Track the max value that was discovered so far.
+	3. As we are talking good nodes int he path so always consider root.val as the minimum value it can have in the path.
+******************************************************************************************************************************
+
+
+
 Solution 1:
 class Solution {
     int numGoodNodes = 0;
