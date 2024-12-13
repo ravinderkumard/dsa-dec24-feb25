@@ -40,6 +40,13 @@ Constraints:
 	-100 <= Node.val <= 100
 
 
+******************************************************************************************************************************
+	NOTES:
+	1. As the problem statement define we are viewing tree from Right side.
+	2. we have to record values from root to height of the tree for Level and return right most element of that level.
+	3. So we need level wise output, so lets consider Level order traversal in this case.
+******************************************************************************************************************************
+
 BFS - Queue
 class Solution {
     public List<Integer> rightSideView(TreeNode root) {
@@ -70,6 +77,16 @@ Complexity Analysis
 Time complexity: O(N) since one has to visit each node.
 Space complexity: O(D) to keep the queues, where D is a tree diameter. Let's use the last level to estimate the queue size. This level could contain up to N/2 tree nodes in the case of complete binary tree.
 
+
+******************************************************************************************************************************
+	NOTES:
+	1. As the problem statement define we are viewing tree from Right side.
+	2. Another way to look at this problem is to recursively process the node and as we reach the last element of the level put that into result.
+	3. Here we have a twist.
+		For Pre order traversal we have : 1. root, left and then right. Here we will do Root, then right and then left.
+		So that we will process right node first as we have to display right side view if we process left node first we will get left 
+		View first.
+******************************************************************************************************************************
 
 
 Optimized
