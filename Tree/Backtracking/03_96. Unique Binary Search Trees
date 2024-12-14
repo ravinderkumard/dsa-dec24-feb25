@@ -1,0 +1,129 @@
+URL: https://leetcode.com/problems/unique-binary-search-trees/description/
+
+96. Unique Binary Search Trees
+
+Given an integer n, return the number of structurally unique BST's (binary search trees) which has exactly n nodes of unique values from 1 to n.
+
+ 
+Example 1:
+
+Input: n = 3
+Output: 5
+
+Example 2:
+
+Input: n = 1
+Output: 1
+
+ 
+Constraints:
+
+	1 <= n <= 19
+
+
+**************************************************************************
+  NOTES:
+    1. If nodes are less than 2, we can only have 1 tree.
+    2. Start with each node and recusively try to find left and right subtree
+      Left = calculate(i-1) as i is the node and we have to look for left of i.
+      right = calcualte(n-i) as we want right so need to skip number less than i
+      Add multiplication of left and right to total.
+
+
+      Comparison with Recursion Without Memoization:
+Without Memoization: Exponential time complexity (𝑂(2^𝑛))
+
+With Memoization: Polynomial time complexity (𝑂(𝑛^2)).
+
+**************************************************************************
+
+
+
+
+
+
+
+Recusive Solution:
+class Solution {
+    public int numTrees(int n) {
+        return countTrees(n);
+    }
+    private int countTrees(int n){
+      //Base Case
+        if(n==0||n==1){
+            return 1; An empty tree or single node tree has exactly 1 structure.
+        }
+        int total = 0;
+        // Loop through all nodes, treating each one as the root.
+        for(int i=1;i<=n;i++){
+            // Calculate the number of unique BST for left and right subtrees.
+            int left = countTrees(i-1); //Nodes on the left subtree
+            int right = countTrees(n-i); // Nodes on the right subtree
+
+            // Add the product of left and righ to the total;
+            total +=left*right;
+        }
+        return total;
+    }
+}
+
+
+Recursion with Memoization
+
+class Solution {
+    public int numTrees(int n) {
+        Integer[] memo = new Integer[n+1];
+        return countTrees(n,memo);
+    }
+    private int countTrees(int n,Integer[] memo){
+        if(n==0||n==1){
+            return 1;
+        }
+        if(memo[n]!=null){
+            return memo[n];
+        }
+        int total = 0;
+
+        for(int i=1;i<=n;i++){
+            int left = countTrees(i-1,memo);
+            int right = countTrees(n-i,memo);
+            total +=left*right;
+        }
+        memo[n] = total;
+        return total;
+    }
+}
+
+
+class Solution {
+    public int numTrees(int n) {
+        int[] unique_tree = new int[n+1];
+        unique_tree[0] = unique_tree[1] = 1;
+        for(int i=0; i<=n;++i){
+            unique_tree[i] = 1;
+        }
+         for (int nodes = 2; nodes <= n; nodes++) {
+            int total = 0;
+            for (int root = 1; root <= nodes; root++) {
+                total += unique_tree[root - 1] * unique_tree[nodes - root];
+            }
+            unique_tree[nodes] = total;
+        }
+
+        return unique_tree[n];  
+    }
+}
+
+class Solution {
+    public int numTrees(int n) {
+        int[] list = new int[n+1];
+        list[0] = 1;
+        list[1] = 1;
+        for(int i=2;i<=n;i++){
+            for(int j=1;j<=i;j++){
+                list[i]+=list[j-1]*list[i-j];
+            }
+        }
+        return list[n];
+    }
+}
