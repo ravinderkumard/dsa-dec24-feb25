@@ -31,6 +31,14 @@ Constraints:
 	Node.val is 0 or 1.
 
 
+******************************************************************************************************************************
+NOTES:
+	Approach 1: find sum for each path and save to list and iterate over each element of list and convert into integer value 
+			Add it to sum and result.
+	Approach 2: Use Preorder traversal of tree and if we reach end of the path add that to root sum.
+******************************************************************************************************************************
+
+
 
 /**
  * Definition for a binary tree node.
