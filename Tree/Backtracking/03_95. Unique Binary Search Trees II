@@ -25,31 +25,45 @@ Constraints:
 * 
 
 
+*****************************************************************************
+Notes: Refer to problem #96
+1. Here we have to give the list of subtrees using n
+2. Lets do back tracking start from 0 to i-1 and i+1 to n.
+3. Iterate over left sub and right subtrre and ad that to trees list.
+
+*****************************************************************************
+
+
 Solution 1: Backtracking
 class Solution {
     public List<TreeNode> generateTrees(int n) {
-        List<TreeNode> result = new ArrayList<>();
-        return backtrack(1,n);
+         if(n==0){
+            return new ArrayList<>();
+        }
+        return generateSubTrees(1,n);
     }
-    public List<TreeNode> backtrack( int start, int end){
-        List<TreeNode> res= new LinkedList<>();
+    private List<TreeNode> generateSubTrees(int start,int end){
+        List<TreeNode> trees = new ArrayList<>();
+        // Base case: If start > end, return an empty tree (null)
         if(start>end){
-            res.add(null);
-            return res;
+            trees.add(null);
+            return trees;
         }
         for(int i=start;i<=end;i++){
-            List<TreeNode> leftSubtrees = backtrack(start,i-1);
-            List<TreeNode> rightSubtrees = backtrack(i+1,end);
-            for(TreeNode left : leftSubtrees){
-                for(TreeNode right: rightSubtrees){
+            // Recursively generate all left subtrees with values less than i
+            List<TreeNode> leftSubtrees = generateSubTrees(start,i-1);
+            // Recursively generate all right subtrees with values greater than i
+            List<TreeNode> rightSubtrees = generateSubTrees(i+1,end);
+            for(TreeNode left:leftSubtrees){
+                for(TreeNode right:rightSubtrees){
                     TreeNode root = new TreeNode(i);
                     root.left = left;
                     root.right = right;
-                    res.add(root);
+                    trees.add(root);
                 }
             }
         }
-        return res;
+        return trees;
     }
 }
 
@@ -87,6 +101,44 @@ class Solution {
     }
 }
 
+
+
+class Solution {
+    public List<TreeNode> generateTrees(int n) {
+        if(n==0){
+            return new ArrayList<>();
+        }
+        //Map<String,List<TreeNode>> memo = new HashMap<>();
+        List<TreeNode>[][] memo = new ArrayList[n+1][n+1];
+        return generateSubTrees(1,n,memo);
+    }
+    private List<TreeNode> generateSubTrees(int start,int end,List<TreeNode>[][] memo){
+        List<TreeNode> trees = new ArrayList<>();
+        // Base case: If start > end, return an empty tree (null)
+        if(start>end){
+            trees.add(null);
+            return trees;
+        }
+        if(memo[start][end]!=null)
+            memo[start][end] = trees;
+        for(int i=start;i<=end;i++){
+            // Recursively generate all left subtrees with values less than i
+            List<TreeNode> leftSubtrees = generateSubTrees(start,i-1,memo);
+            // Recursively generate all right subtrees with values greater than i
+            List<TreeNode> rightSubtrees = generateSubTrees(i+1,end,memo);
+            for(TreeNode left:leftSubtrees){
+                for(TreeNode right:rightSubtrees){
+                    TreeNode root = new TreeNode(i);
+                    root.left = left;
+                    root.right = right;
+                    trees.add(root);
+                }
+            }
+        }
+        memo[start][end] = trees;
+        return trees;
+    }
+}
 
 
 
