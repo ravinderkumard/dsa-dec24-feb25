@@ -1,0 +1,129 @@
+366. Find Leaves of Binary Tree
+
+URL: https://leetcode.com/problems/find-leaves-of-binary-tree/description/
+
+
+
+Given the root of a binary tree, collect a tree's nodes as if you were doing this:
+
+	Collect all the leaf nodes.
+	Remove all the leaf nodes.
+	Repeat until the tree is empty.
+
+ 
+Example 1:
+
+Input: root = [1,2,3,4,5]
+Output: [[4,5,3],[2],[1]]
+Explanation:
+[[3,5,4],[2],[1]] and [[3,4,5],[2],[1]] are also considered correct answers since per each level it does not matter the order on which elements are returned.
+
+Example 2:
+
+Input: root = [1]
+Output: [[1]]
+
+ 
+Constraints:
+
+	The number of nodes in the tree is in the range [1, 100].
+	-100 <= Node.val <= 100
+
+
+TC: O(NlogN)
+SC: O(N)
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    private List<Pair<Integer,Integer>> pairs;
+
+    public List<List<Integer>> findLeaves(TreeNode root) {
+        this.pairs = new ArrayList<>();
+        getHeight(root);
+
+        Collections.sort(this.pairs,Comparator.comparing(p->p.getKey()));
+        int n = this.pairs.size(),height=0,i=0;
+
+        List<List<Integer>> solution = new ArrayList();
+        while(i<n){
+            List<Integer> nums = new ArrayList<>();
+            while(i<n && this.pairs.get(i).getKey()==height){
+                nums.add(this.pairs.get(i).getValue());
+                i++;
+            }
+            solution.add(nums);
+            height++;
+        }
+        return solution;
+
+    }
+    private int getHeight(TreeNode root){
+        if(root==null) return -1;
+
+        int leftHeight = getHeight(root.left);
+        int rightHeight = getHeight(root.right);
+        int currHeight = Math.max(leftHeight,rightHeight)+1;
+
+        this.pairs.add(new Pair<Integer,Integer>(currHeight,root.val));
+        return currHeight;
+    }
+}
+
+
+
+
+TC: O(N)
+SC: O(N)
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    private List<List<Integer>> solution;
+
+    public List<List<Integer>> findLeaves(TreeNode root) {
+        this.solution = new ArrayList<>();
+        getHeight(root);
+        return this.solution;    
+    }
+    private int getHeight(TreeNode root){
+        if(root==null){
+            return -1;
+        }
+        int leftHeight = getHeight(root.left);
+        int rightHeight = getHeight(root.right);
+        int currHeight = Math.max(leftHeight,rightHeight)+1;
+
+        if(this.solution.size()==currHeight){
+            this.solution.add(new ArrayList<>());
+        }
+        
+        this.solution.get(currHeight).add(root.val);
+        return currHeight;
+    }
+}
