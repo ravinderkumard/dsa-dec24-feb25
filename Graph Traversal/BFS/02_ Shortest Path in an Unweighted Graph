@@ -1,0 +1,86 @@
+Shortest Path in an Unweighted Graph
+
+
+The shortest path in an unweighted graph can be efficiently found using Breadth-First Search (BFS). Since the graph is unweighted, BFS guarantees that when you first visit a node, you do so via the shortest path.
+
+Algorithm: Shortest Path Using BFS
+Initialize the BFS:
+
+Start from the source node.
+Use a queue to manage nodes to be explored.
+Maintain a distance array to store the shortest distance of each node from the source. Initialize all distances as infinity (∞) except for the source, which is set to 0.
+Perform BFS:
+
+Dequeue a node from the front of the queue.
+Explore all its neighbors:
+If the distance to a neighbor is not yet updated, set its distance as the current node's distance + 1 and enqueue the neighbor.
+Termination:
+
+The BFS continues until the queue is empty.
+The distance array will contain the shortest distance from the source to all other nodes.
+
+
+import java.util.*;
+
+public class ShortestPathUnweighted {
+
+    // Method to find the shortest path using BFS
+    public static Map<Integer, Integer> shortestPath(Map<Integer, List<Integer>> graph, int source) {
+        // Initialize the distance map with infinity
+        Map<Integer, Integer> distances = new HashMap<>();
+        for (Integer node : graph.keySet()) {
+            distances.put(node, Integer.MAX_VALUE);
+        }
+        distances.put(source, 0); // Distance to the source is 0
+
+        // BFS queue
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(source);
+
+        // Perform BFS
+        while (!queue.isEmpty()) {
+            int current = queue.poll();
+
+            for (int neighbor : graph.get(current)) {
+                if (distances.get(neighbor) == Integer.MAX_VALUE) { // Not visited yet
+                    distances.put(neighbor, distances.get(current) + 1);
+                    queue.add(neighbor);
+                }
+            }
+        }
+
+        return distances;
+    }
+
+    public static void main(String[] args) {
+        // Example graph (adjacency list representation)
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        graph.put(1, Arrays.asList(2, 3));
+        graph.put(2, Arrays.asList(1, 4, 5));
+        graph.put(3, Arrays.asList(1, 6));
+        graph.put(4, Arrays.asList(2));
+        graph.put(5, Arrays.asList(2, 6));
+        graph.put(6, Arrays.asList(3, 5));
+
+        int source = 1;
+        Map<Integer, Integer> distances = shortestPath(graph, source);
+
+        // Print shortest distances
+        System.out.println("Shortest distances from node " + source + ":");
+        for (Map.Entry<Integer, Integer> entry : distances.entrySet()) {
+            System.out.println("Node " + entry.getKey() + ": " + entry.getValue());
+        }
+    }
+}
+
+
+
+Explanation of Example
+Graph: Represented as an adjacency list.
+Source Node: A
+Output: A dictionary showing the shortest distances from A to all other nodes.
+Time Complexity
+O(V + E), where V is the number of vertices and E is the number of edges, since each vertex and edge is processed once.
+Space Complexity
+O(V) for the distance dictionary and BFS queue.
+This approach is highly efficient for unweighted graphs and guarantees the shortest path for every node.
