@@ -32,7 +32,20 @@ Constraints:
 	All Node.val are unique.
 	p != q
 	p and q will exist in the tree.
+*************************************************************************************
 
+	NOTES:
+	1. This is an exmaple of Binary Tree, So like 236 where we have to search node in BST we donot have a set pattern of element
+		on left side or right side to node.
+	2. So, idea is to iterate both left and right side of the tree and check both p and q or both left and right of the node if they are not node itself.
+	3. Check if the p or q itself is at root => retrun root if so.
+	4. Check both P and Q on Left side of the root and similarly check P and Q or Right side of root.
+	5. If both are are not null that mean P and Q reside in both left and right side to tree so return root.
+	6. If either is not null return resutl accordingly.
+
+	Consider: Values in tree are unique and their may exist values in tree.
+
+*************************************************************************************
 
 /**
  * Definition for a binary tree node.

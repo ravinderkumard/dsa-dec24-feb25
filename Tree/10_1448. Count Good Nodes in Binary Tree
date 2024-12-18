@@ -35,6 +35,17 @@ Constraints:
 	The number of nodes in the binary tree is in the range [1, 10^5].
 	Each node's value is between [-10^4, 10^4].
 
+
+******************************************************************************************************************************
+	NOTES:
+	Here we are talking about node in the path must have value greater than pervious one.
+	1. Perform DFS.
+	2. Track the max value that was discovered so far.
+	3. As we are talking good nodes int he path so always consider root.val as the minimum value it can have in the path.
+******************************************************************************************************************************
+
+
+
 Solution 1:
 class Solution {
     int numGoodNodes = 0;
@@ -163,3 +174,29 @@ Space complexity: O(N)
 
 The worst case scenario for space with BFS is when the tree is full. In this scenario, the final level contains N/2 nodes, and our queue will hold all the nodes in the final level at some point.
 
+Solution 4:
+class Solution {
+    int numberOfGoodNodes = 0;
+    public int goodNodes(TreeNode root) {
+        if(root==null){
+            return numberOfGoodNodes;
+        }
+        dfs(root,Integer.MIN_VALUE);
+        return numberOfGoodNodes;
+    }
+    private void dfs(TreeNode root,int maxSoFar){
+        if(maxSoFar<=root.val){
+            numberOfGoodNodes++;
+            maxSoFar = root.val;
+        }
+        if(root.left!=null){
+            dfs(root.left,maxSoFar);
+        }
+        if(root.right!=null){
+            dfs(root.right,maxSoFar);
+        }
+    }
+}
+
+
+Notes: compare current value of node with max so far if value is greater increase good nodes count, and keep going inside to update the max so far, 

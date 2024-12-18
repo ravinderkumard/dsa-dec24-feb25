@@ -33,6 +33,18 @@ Constraints:
 	p != q
 	p and q will exist in the BST.
 
+*************************************************************************************
+	NOTES:
+	1. Question talks about BST.
+	2. Property Left side of node will have smaller values and right will have larger values
+	3. Use this property to check the Root node value with p and q.
+		If root is greater than both these values check recursive call with left sub tree.
+		If root is smaller than both these values check recursive call with right subtree.
+	4. Return root otherwise.
+
+	Iterative call with save some memory for our case but works in same way
+
+*************************************************************************************
 
 class Solution {
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {

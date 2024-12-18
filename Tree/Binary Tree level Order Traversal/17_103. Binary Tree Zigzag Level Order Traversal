@@ -79,7 +79,13 @@ class Solution {
     }
 }
 
+************************************************************************************************************************
+NOTES:
+	1. Run DFS preorder traversal
+	2. If current level record doesnot exist create one or add element ot current level
+	3. Level is even add to last otherwise to the first.
 
+************************************************************************************************************************
 
 
 /**
