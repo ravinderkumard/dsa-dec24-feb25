@@ -1,0 +1,107 @@
+Find the shortest path between two nodes in an unweighted graph.
+
+
+
+To find the shortest path between two nodes in an unweighted graph, we can use Breadth-First Search (BFS). 
+In addition to finding the shortest distance, we will also backtrack to reconstruct the actual path from the source to the target.
+
+
+Algorithm:
+Perform BFS:
+
+Start from the source node and explore all its neighbors level by level.
+Keep track of the parent of each visited node to reconstruct the path later.
+Stop BFS When Target Is Found:
+
+Terminate the BFS early if the target node is reached, to optimize performance.
+Reconstruct the Path:
+
+Backtrack from the target node to the source node using the parent map.
+
+
+
+import java.util.*;
+
+public class ShortestPathUnweightedGraph {
+
+    // Method to find the shortest path between source and target
+    public static List<Integer> shortestPath(Map<Integer, List<Integer>> graph, int source, int target) {
+        // Map to store the parent of each node (for path reconstruction)
+        Map<Integer, Integer> parent = new HashMap<>();
+        // Set to track visited nodes
+        Set<Integer> visited = new HashSet<>();
+        // Queue for BFS
+        Queue<Integer> queue = new LinkedList<>();
+
+        // Initialize BFS
+        queue.add(source);
+        visited.add(source);
+        parent.put(source, null); // Source has no parent
+
+        // Perform BFS
+        while (!queue.isEmpty()) {
+            int current = queue.poll();
+
+            // If target is found, stop BFS
+            if (current == target) {
+                break;
+            }
+
+            // Explore neighbors
+            for (int neighbor : graph.get(current)) {
+                if (!visited.contains(neighbor)) {
+                    visited.add(neighbor);
+                    parent.put(neighbor, current); // Record parent for path reconstruction
+                    queue.add(neighbor);
+                }
+            }
+        }
+
+        // If target is not reachable, return an empty list
+        if (!parent.containsKey(target)) {
+            return Collections.emptyList();
+        }
+
+        // Reconstruct the path from target to source using the parent map
+        List<Integer> path = new ArrayList<>();
+        for (Integer node = target; node != null; node = parent.get(node)) {
+            path.add(node);
+        }
+        Collections.reverse(path); // Reverse to get the path from source to target
+
+        return path;
+    }
+
+    public static void main(String[] args) {
+        // Example graph (adjacency list representation)
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        graph.put(1, Arrays.asList(2, 3));
+        graph.put(2, Arrays.asList(1, 4, 5));
+        graph.put(3, Arrays.asList(1, 6));
+        graph.put(4, Arrays.asList(2));
+        graph.put(5, Arrays.asList(2, 6));
+        graph.put(6, Arrays.asList(3, 5));
+
+        int source = 1;
+        int target = 6;
+
+        List<Integer> path = shortestPath(graph, source, target);
+
+        if (path.isEmpty()) {
+            System.out.println("No path exists between " + source + " and " + target);
+        } else {
+            System.out.println("Shortest path between " + source + " and " + target + ": " + path);
+        }
+    }
+}
+
+
+
+
+
+Complexity:
+Time Complexity:
+O(V + E), where V is the number of vertices and E is the number of edges, since BFS explores all nodes and edges.
+
+Space Complexity:
+O(V) for the parent map, visited set, and BFS queue.
