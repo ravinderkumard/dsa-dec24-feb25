@@ -1,0 +1,136 @@
+URL: https://leetcode.com/problems/the-maze/description/
+
+490. The Maze
+
+There is a ball in a maze with empty spaces (represented as 0) and walls (represented as 1). The ball can go through the empty spaces by rolling up, down, left or right, but it won't stop rolling until hitting a wall. When the ball stops, it could choose the next direction.
+
+Given the m x n maze, the ball's start position and the destination, where start = [startrow, startcol] and destination = [destinationrow, destinationcol], return true if the ball can stop at the destination, otherwise return false.
+
+You may assume that the borders of the maze are all walls (see examples).
+
+ 
+Example 1:
+
+Input: maze = [[0,0,1,0,0],[0,0,0,0,0],[0,0,0,1,0],[1,1,0,1,1],[0,0,0,0,0]], start = [0,4], destination = [4,4]
+Output: true
+Explanation: One possible way is : left -> down -> left -> down -> right -> down -> right.
+
+Example 2:
+
+Input: maze = [[0,0,1,0,0],[0,0,0,0,0],[0,0,0,1,0],[1,1,0,1,1],[0,0,0,0,0]], start = [0,4], destination = [3,2]
+Output: false
+Explanation: There is no way for the ball to stop at the destination. Notice that you can pass through the destination but you cannot stop there.
+
+Example 3:
+
+Input: maze = [[0,0,0,0,0],[1,1,0,0,1],[0,0,0,0,0],[0,1,0,0,1],[0,1,0,0,0]], start = [4,3], destination = [0,1]
+Output: false
+
+ 
+Constraints:
+
+	m == maze.length
+	n == maze[i].length
+	1 <= m, n <= 100
+	maze[i][j] is 0 or 1.
+	start.length == 2
+	destination.length == 2
+	0 <= startrow, destinationrow < m
+	0 <= startcol, destinationcol < n
+	Both the ball and the destination exist in an empty space, and they will not be in the same position initially.
+	The maze contains at least 2 empty spaces.
+
+************************************************************************************************************************************
+NOTES:
+1. Add Start index to Queue, initiazile start as visited.
+2. Iterate BFS over queue for each element
+    1. Check if element is destination return true.
+    2. Move in 4 direction and keep rolling the ball until it hit the boundary.
+    3. Iterate 1 step back and check if that is not visited add it into queue and mark index as visited.
+3. Return false if destination is not reachable.
+
+************************************************************************************************************************************
+
+
+
+class Solution {
+    public boolean hasPath(int[][] maze, int[] start, int[] destination) {
+        int rows=maze.length;
+        int cols = maze[0].length;
+        boolean[][] visited = new boolean[rows][cols];
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(start);
+        int[][] dirs = {{0,1},{1,0},{-1,0},{0,-1}};
+        visited[start[0]][start[1]] = true;
+        while(!queue.isEmpty()){
+            int[] element = queue.poll();
+            int r = element[0];
+            int c = element[1];
+            if(r==destination[0] && c ==destination[1]){
+                return true;
+            }
+            for(int[] dir:dirs){
+                r = element[0];
+                c = element[1];
+                while(r>=0 && r<rows && c>=0 && c<cols && maze[r][c]==0){
+                    r+=dir[0];
+                    c+=dir[1];
+                }
+                r-=dir[0];
+                c-=dir[1];
+                if(!visited[r][c]){
+                    queue.offer(new int[]{r,c});
+                    visited[r][c] = true;
+                }
+            }
+        }
+        return false;
+    }
+}
+
+Complexity Analysis
+Time Complexity : O(m.n.(m+n))
+Space Complexity: O(m.n)
+
+
+
+
+DFS solution
+
+class Solution {
+    public boolean hasPath(int[][] maze, int[] start, int[] destination) {
+        int rows = maze.length;
+        int cols = maze[0].length;
+        boolean[][] visited = new boolean[rows][cols];
+        return dfs(rows,cols,maze,start,destination,visited);
+    }
+    public boolean dfs(int m, int n, int[][] maze,int[] curr,int[] destination,boolean[][] visited){
+        if(visited[curr[0]][curr[1]]){
+            return false;
+        }
+        if(curr[0]==destination[0] && curr[1]==destination[1]){
+            return true;
+        }
+        visited[curr[0]][curr[1]] = true;
+        int[][] dirs = {{0,1},{0,-1},{1,0},{-1,0}};
+        for(int[] dir:dirs){
+            int r = curr[0];
+            int c = curr[1];
+            while(r>=0 && r<m && c>=0 && c<n && maze[r][c]==0){
+                r+=dir[0];
+                c+=dir[1];
+            }
+            r-=dir[0];
+            c-=dir[1];
+            if(dfs(m,n,maze,new int[]{r,c},destination,visited)){
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+
+Complexity Analysis
+Time Complexity : O(m.n.(m+n))
+Space Complexity: O(m.n)
