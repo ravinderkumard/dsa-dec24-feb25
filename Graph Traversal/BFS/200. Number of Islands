@@ -1,0 +1,97 @@
+200. Number of Islands
+Medium
+
+URL: https://leetcode.com/problems/number-of-islands/
+
+Given an m x n 2D binary grid grid which represents a map of '1's (land) and '0's (water), return the number of islands.
+
+An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.
+
+ 
+Example 1:
+
+Input: grid = [
+  ["1","1","1","1","0"],
+  ["1","1","0","1","0"],
+  ["1","1","0","0","0"],
+  ["0","0","0","0","0"]
+]
+Output: 1
+
+Example 2:
+
+Input: grid = [
+  ["1","1","0","0","0"],
+  ["1","1","0","0","0"],
+  ["0","0","1","0","0"],
+  ["0","0","0","1","1"]
+]
+Output: 3
+
+ 
+Constraints:
+
+	m == grid.length
+	n == grid[i].length
+	1 <= m, n <= 300
+	grid[i][j] is '0' or '1'.
+
+***************************************************************************************************************************
+NOTES:
+Given 2 D matrix with 2 possibilites '0' or '1'.
+Iterate over this 2D array and try to find components that are connected together.
+1. Starting from 0,0 index, try to find how may cells while moving in 4 directions have a value of '1'(land), if all are '0'(water)
+  0,0 is 1 island increse count and makr this cell as water as we don't want to process it again. similarly move to the next element.
+  And if element in 4 direction contains, try to process thease land element and keep marking those as '0'(water), so we will not process it again.
+  All closely related elements will be processed first before moving to next index in grid.
+
+Algorithm:
+  1. Start iterating each cell of the matrix.
+  2. if current element is '1'(land), increase the countOfIsland and call backtrack method.
+  3. Retur count.
+
+  Helper Method:
+  Method will be called recursively for all the adjacent cell by changing row and column index in 4 directions
+      1. Down(row+1)
+      2. Up(row-1)
+      3. Left(col-1)
+      4. Right(col+1)
+
+  1. Base case: Check if we meet boundary condition i.e row < 0 or row >= rows(number of rows) or col < 0 or col>=cols(number of cols) or element at row, col is already '0' water.
+        Return;
+  2. Set current row, col to '0'(so that it will process again).
+  3. Recursively call helper method 4 times for each of the above 4 cases
+
+***************************************************************************************************************************
+
+
+class Solution {
+    public int numIslands(char[][] grid) {
+        int row = grid.length;
+        int col = grid[0].length;
+        int countIsland = 0;
+        for(int rowIndex = 0;rowIndex<row;rowIndex++){
+            for(int colIndex=0;colIndex<col;colIndex++){
+                if(grid[rowIndex][colIndex]=='1'){
+                    countIsland++;
+                    backtrack(grid,rowIndex,colIndex,row,col);
+                }
+            }
+        }
+        return countIsland;
+    }
+    public void backtrack(char[][] grid,int rowIndex,int colIndex,int row,int col){
+        if(rowIndex<0|| rowIndex>=row || colIndex<0 || colIndex>=col || grid[rowIndex][colIndex]=='0'){
+            return;
+        }
+        grid[rowIndex][colIndex]='0';
+        backtrack(grid,rowIndex+1,colIndex,row,col);
+        backtrack(grid,rowIndex-1,colIndex,row,col);
+        backtrack(grid,rowIndex,colIndex+1,row,col);
+        backtrack(grid,rowIndex,colIndex-1,row,col);
+    }
+}
+
+Complexity Analysis:
+Time Complexity: O(M x N)
+Space Complexity: O(M x N)
