@@ -1,0 +1,62 @@
+Given an array of meeting time interval objects consisting of start and end times [[start_1,end_1],[start_2,end_2],...] (start_i < end_i), 
+find the minimum number of days required to schedule all meetings without any conflicts.
+
+Example 1:
+
+Input: intervals = [(0,40),(5,10),(15,20)]
+
+Output: 2
+Explanation:
+day1: (0,40)
+day2: (5,10),(15,20)
+
+Example 2:
+
+Input: intervals = [(4,9)]
+
+Output: 1 
+
+
+1. Sorting by start
+    0, 40
+    5, 10,     15,20
+
+    max day = update Max day(day+1,maxDay);
+   start = 0  day+1
+   end = 40   day-1
+
+   List<int[]> newInterval = new ArrayList<>();
+
+   {{0,1},{40,-1}}
+
+   for(int[] interval:intervals){
+     
+        newInter.add(new int[]{interval[0],1});
+        newInter.add(new int[]{interval[1],-1});
+   }
+
+   newInterval.sort((a,b)-> a[0]==b[0]?a[1]-b[1]:a[0]-b[0]);
+
+    (0,1),(5,1),(15,1),
+
+   for(int[] itr:newInterval){
+
+   }
+
+
+   public int minDaysRequired(int[][] intervals){
+    List<int[]> events = new ArrayList<>();
+
+    for(int[] interval:intervals){
+        events.add(new int[]{interval[0],1});
+        events.add(new int[]{interval[1],-1});
+    }
+    events.sort((a,b)->(a[0]==b[0])?Integer.compare(a[1],b[1]):Integer.compare(a[0],b[0]));
+
+    int activeMeetings = 0, maxMeeting = 0;
+    for(int event[]:events){
+        activeMeetings+=event[1];
+        maxMeeting = Math.max(maxMeeting,activeMeetings);
+    }
+    return maxMeeting;
+   }
