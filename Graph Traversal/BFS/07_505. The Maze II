@@ -44,7 +44,21 @@ Constraints:
 	Both the ball and the destination exist in an empty space, and they will not be in the same position initially.
 	The maze contains at least 2 empty spaces.
 
+************************************************************************************************************************************
+NOTES:
+1. Use same technique as Maze Problem LC#490
+2. The only differenc between 2 problems:
+	1. IN problem 1 you just have to stop and return true if you meet your destination.
+	2. In second Problem you jsut have to calcualte distance for all the boxes and then return if result at
+	destination is some value and not MAX_VALUE.
 
+1. Use BFS
+2. create array of same size as maze and populate with MAX_VALUE, set start value as 0.
+3. Put start index to Queue
+4. Iterate over queue by pulling out element and rolling until ball roll by add dir[0], dir[1] to x and y and keep increating the count by 1
+5. check if distanceof the element + count is less than element at current position(where we are), update the value
+	and add the coordinates to queue.
+************************************************************************************************************************************
 
 
 class Solution {
