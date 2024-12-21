@@ -1,0 +1,82 @@
+
+347. Top K Frequent Elements
+
+URL: https://leetcode.com/problems/top-k-frequent-elements/description/
+
+Given an integer array nums and an integer k, return the k most frequent elements. You may return the answer in any order.
+
+ 
+Example 1:
+Input: nums = [1,1,1,2,2,3], k = 2
+Output: [1,2]
+Example 2:
+Input: nums = [1], k = 1
+Output: [1]
+
+ 
+Constraints:
+
+	1 <= nums.length <= 105
+	-104 <= nums[i] <= 104
+	k is in the range [1, the number of unique elements in the array].
+	It is guaranteed that the answer is unique.
+
+ 
+Follow up: Your algorithm's time complexity must be better than O(n log n), where n is the array's size.
+
+
+class Solution {
+    public int[] topKFrequent(int[] nums, int k) {
+        Map<Integer,Integer> occurance = new HashMap<>();
+        for(int n:nums){
+            occurance.put(n,occurance.getOrDefault(n,0)+1);
+        }
+        PriorityQueue<Map.Entry<Integer,Integer>> queue = new PriorityQueue<>((a,b)->a.getValue()-b.getValue());
+        for(Map.Entry<Integer,Integer> e: occurance.entrySet()){
+            queue.add(e);
+            if(queue.size()>k){
+                queue.poll();
+            }
+        }
+        int i=0;
+        int[] result = new int[k];
+        while(!queue.isEmpty()){
+            result[i++]=queue.poll().getKey();
+        }
+        return result;
+        
+    }
+}
+
+
+class Solution {
+    public int[] topKFrequent(int[] nums, int k) {
+        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+
+        for(int num: nums){
+            map.put(num, map.getOrDefault(num, 0) + 1);
+        }
+
+        List<Integer>[] freq = new ArrayList[nums.length+1];
+        for(int i = 0; i < freq.length; i++){
+            freq[i] = new ArrayList<>();
+        }
+
+        for(Map.Entry<Integer,Integer> rec : map.entrySet()){
+            int frequence = rec.getValue();
+            freq[frequence].add(rec.getKey());
+        }
+        int[] topK = new int[k];
+        int index = 0;
+
+        for(int i=freq.length-1;i>=0;i--){
+            for(int num:freq[i]){
+                topK[index++] = num;
+                if(index==k){
+                    return topK;
+                }
+            }
+        }
+        return new int[]{};
+    }
+}
