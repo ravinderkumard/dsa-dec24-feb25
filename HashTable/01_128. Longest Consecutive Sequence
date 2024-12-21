@@ -55,6 +55,19 @@ class Solution {
     }
 }
 
+The complexity of the given code is as follows:
+1. Time Complexity
+* HashSet population: The first for loop iterates over the array nums and adds each number to the HashSet. This takes O(n) on average because each insertion into a HashSet is O(1).
+* Finding the longest consecutive sequence:
+    * The second for loop iterates over the array nums, and for each number n, it checks if n−1 exists in the HashSet.
+    * If n−1 doesn't exist, it starts counting the consecutive sequence from n. In the worst case, this counting (while loop) iterates over all numbers in the HashSet exactly once, as each number is "visited" only if it's the start of a sequence. Thus, the total time spent in the while loop across all iterations is O(n).
+	Overall, the time complexity is:
+	O(n)+O(n)=O(n)
+2. Space Complexity
+* The space complexity is determined by the HashSet, which stores all unique numbers in nums. In the worst case, if all elements in nums are unique, the space complexity is O(n).
+
+
+
 
 TC: O(nLogn)
 SC: O(1)
