@@ -31,6 +31,13 @@ Constraints:
 	All values of nums are unique.
 	nums is an ascending array that is possibly rotated.
 	-104 <= target <= 104 
+********************************************************************************************
+NOTES: 
+1. Try to reduce the search space by compareing left and mid and mid and right
+2. If element fall in the range try updating left and right other wise return -1 if not found.
+
+********************************************************************************************
+
 
 class Solution {
     public int search(int[] nums, int target) {
