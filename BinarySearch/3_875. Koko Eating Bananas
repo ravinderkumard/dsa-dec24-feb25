@@ -33,7 +33,15 @@ Constraints:
 	piles.length <= h <= 109
 	1 <= piles[i] <= 109
 
+********************************************************************************************************************************
+NOTES:
+1. Here we have to find the search Space for that we can consider check each element from 1 to Infinite to determine the correct number to spend
+2. Iterative solution will give TLE as processing each number will be difficult.
+3. as we are going from 1 to infiinite i.e increaing order seeems hours are sorted let try with binary search.
+	Reduce the search space from 1 to maxvalue.
+	and check if the middle elemnt is our desired answer.
 
+********************************************************************************************************************************
 
 class Solution {
 
