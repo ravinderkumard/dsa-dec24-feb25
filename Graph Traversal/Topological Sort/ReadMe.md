@@ -188,3 +188,21 @@ public class BFSTopologicalSort {
     2. Minimum Height Trees(#310)
     3. Reconstruct Itinerary(#332)
     4. Course Schedule III(630)
+
+
+## More Problems
+### Intermediate-Level Problems
+    1.    Longest Path in Directed Acyclic Graph(Custom Problem)
+    2.    Checking validity of an Alien Dictionary(#953)
+    3.    Find Eventual Safe States(#802)
+### Advanced-Level Problem
+    1.    Minimum Tiime to complete All Tasks(#2050)
+    2.    Find All Possible Recipes(#2115)
+    3.    Number of ways to Reorder Array to Get Same BST(#1569)
+    4.    Smallest String with Swaps(#1202)
+    5.    Maximum number of Tasks you can Assign(#2071)
+### Challenging Problems with Topological Sort
+    1.    Number of Connected Components in an Undirected Graph(#323)
+    2.    Longest Increasing Path in a Matrix(#329)
+    3.    All Tasks Scheduling Order(Premium Problem)
+    4.    Find Critical and Pseudo-Critical Edges of MST(#1489)
