@@ -20,5 +20,8 @@ This approach uses Depth First Search (DFS) to find a valid topological order by
           *    Mark the current node as visited.
           *    Recursively visit all its neighbors.
           *    Once all neighbors are processed, add the current node to a stack (postorder traversal).
-4.    **Check for Cycle**
-5.    **Build Result:**
+4.    **Check for Cycle:** Maintain a recursion stack to detect cycles in the graph.
+5.    **Build Result:** Once DFS is complete for all nodes, the stack contains the topological order (reverse the stack to get the order).
+
+  ## Time Complexity: O(V+E)
+  ## Space Complexity: O(V)
