@@ -89,3 +89,133 @@ class Solution {
          return dist[n*n];
     }
 }
+
+
+
+
+
+
+
+class Solution {
+
+    public int snakesAndLadders(int[][] board) {
+        int destination = board.length * board.length; // Calculate the destination cell number
+        boolean[] visited = new boolean[destination + 1]; // Array to keep track of visited cells
+        Deque<Integer> q = new ArrayDeque<>(); // Queue to perform BFS
+        q.add(1); // Start BFS from the first cell
+        visited[1] = true; // Mark the first cell as visited
+        int ans = 0; // This will keep track of the number of moves
+
+        // BFS loop
+        while (!q.isEmpty()) {
+            ans++; // Increment move count at each level of BFS
+            int size = q.size();
+            for (int i = 0; i < size; i++) {
+                int f = q.poll(); // Get the current cell number
+                boolean added = false; // Flag to ensure we add only one new node per dice roll
+                for (int j = 6; j > 0; j--) { // Simulate all dice rolls from 6 to 1
+                    int nc = f + j; // Calculate new cell number after rolling the die
+                    if (nc >= destination) // If we reach or exceed the destination, return the result
+                        return ans;
+                    if (!visited[nc]) { // If the new cell hasn't been visited
+                        int c = getCell(board, nc, board.length);
+                        if (c == destination) // If the move lands exactly on the destination
+                            return ans;
+                        if ((c == -1 || c == nc) && !added) { // No snake/ladder or it leads to the same position
+                            q.offer(nc); // Add the position to the queue
+                            added = true; // Ensure we only add once per dice roll
+                        } else if (c > 0) { // If there is a snake/ladder that leads to a different cell
+                            q.offer(c); // Add the destination cell after the snake/ladder to the queue
+                        }
+                        visited[nc] = true; // Mark the new cell as visited
+                    }
+                }
+            }
+        }
+        return -1; // If we exit the loop without finding the destination, return -1
+    }
+
+    // Helper function to calculate the 2D coordinates on the board from a 1D cell number
+    int getCell(int[][] board, int k) {
+        int n = board.length; // The size of the board
+        int r = n - 1 -  (k-1) / n; // Row index, counting from the bottom of the board
+        int c = 0;
+        if (n % 2 == 1) // If the number of rows is odd
+            c = (r % 2 == 0 ? (k-1) % n : n - 1 - (k-1) % n); // Compute the column index based on row direction
+        else // If the number of rows is even
+            c = (r % 2 == 0 ?  n - 1 - (k-1) % n : (k-1) % n); // Compute the column index based on row direction
+        return board[r][c]; // Return the value at the calculated cell
+    }
+
+    public int getCell(int[][] board, int curr, int n) {
+        int r = n - (curr - 1) / n  -1;
+        int c = (curr - 1) % n;
+        if (r % 2 == n % 2) {
+            return board[r][n - 1 - c];
+        } else {
+            return board[r][c];
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+    // public int snakesAndLadders(int[][] board) {
+    //     int n = board.length;
+    //     Map<Integer, Integer> map = new HashMap<>();
+    //     int[] vis = new int[n*n + 1];
+
+    //     for(int i=1; i<=n; i++) {
+    //         for(int j=1; j<=n; j++) {
+    //             vis[(i-1)*n + j] = n*6 + 1;
+    //             if(board[i-1][j-1] != -1) {
+    //                 int val = (n-i)*n + ((n-i)%2==0? j: n+1-j);
+    //                 if(val != board[i-1][j-1]) {
+    //                     map.put(val, board[i-1][j-1]);
+    //                 }
+    //             }
+    //         }
+    //     }
+
+    //     // map.entrySet().stream()
+    //     //     .map(entry -> new Object[]{entry.getKey(), entry.getValue()})
+    //     //     .forEach(array -> System.out.println(Arrays.toString(array)));
+
+    //     int pos = 1;
+
+    //     return dfs(map, vis, n, pos, 0);
+    // }
+
+    // private int dfs(Map<Integer, Integer> map, int[] vis, int n, int pos, int cnt)
+    // {
+    //     if(pos >= n*n) return 0;
+
+    //     int max = Math.min(pos+6, n*n);
+    //     int minStep = Integer.MAX_VALUE;
+    //     boolean normalAdded = false;
+
+    //     for(int i=max; i>pos; i--) {
+    //         if(vis[i] > cnt) {
+    //             vis[i] = cnt+1;
+    //             int nc = map.getOrDefault(i, i);
+    //             if(!normalAdded || map.containsKey(i)){
+    //                 int step = dfs(map, vis, n, nc, cnt+1);
+    //                 if(step != -1) {
+    //                     minStep = Math.min(step, minStep);
+    //                 }
+    //             }
+    //             if(nc == i && !map.containsKey(i) && !normalAdded) {
+    //                 normalAdded = true;   
+    //             }
+    //         }
+    //     }
+
+    //     return minStep == Integer.MAX_VALUE? -1: minStep+1;
+    // }
+}
