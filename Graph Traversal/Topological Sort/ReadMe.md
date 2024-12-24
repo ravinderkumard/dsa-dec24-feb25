@@ -167,6 +167,11 @@ public class BFSTopologicalSort {
 3.    **Edge Cases:** Disconnected Graphs, Graph with cycle.
 
 
+| Attempt | #1    | #2    |
+| :-----: | :---: | :---: |
+| Seconds | 301   | 283   |
+
+
 
 ## Problems:
 ### Beginner Level
