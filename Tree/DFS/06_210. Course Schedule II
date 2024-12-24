@@ -87,6 +87,53 @@ class Solution {
 }
 
 
+*****************************************************************************************************************************
+class Solution {
+    int idx=0;
+    int[] order;
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        order = new int[numCourses];
+        List<List<Integer>> graph = new ArrayList<>();
+        for(int i=0;i<numCourses;i++){
+            graph.add(new ArrayList<>());
+        }
+        for(int[] pre:prerequisites){
+            graph.get(pre[0]).add(pre[1]);
+        }
+        boolean[] visited = new boolean[numCourses];
+        boolean[] visiting = new boolean[numCourses];
+        for(int i=0;i<numCourses;i++){
+            if(!dfs(graph,i,visiting,visited)){
+                return new int[]{};
+            }
+        }
+        return order;
+    }
+    private boolean dfs(List<List<Integer>> graph,int curr,boolean[] visiting,boolean[] visited){
+        if(visited[curr]){
+            return false;
+        }
+        if(visiting[curr]){
+            return true;
+        }
+        visited[curr]=true;
+        for(int next:graph.get(curr)){
+            if(!dfs(graph,next,visiting,visited)){
+                return false;
+            }
+        }        
+        visited[curr] = false;
+        visiting[curr] = true;
+        order[this.idx++] = curr;
+        return true;
+    }
+}
+
+*****************************************************************************************************************************
+
+
+
+
 
 class Solution {
     public int[] findOrder(int numCourses, int[][] prerequisites) {
