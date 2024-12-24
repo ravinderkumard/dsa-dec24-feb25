@@ -159,3 +159,9 @@ public class BFSTopologicalSort {
         System.out.println(topologicalSort(6, edges)); // Output: [5, 4, 2, 3, 1, 0]
     }
 }
+
+
+## Key Points in Both Approaches:
+1.    **Graph Represenation:** We used a Map<Integer,List<Integer>> to represent the adjancey List.
+2.    **Cycle Detection:** DFS approach use a boolean[] onPath array, BFS approach check if all nodes are processed.
+3.    **Edge Cases:** Disconnected Graphs, Graph with cycle.
