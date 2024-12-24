@@ -13,4 +13,12 @@ Optimize for Edge Cases: Test graphs with cycles, single nodes, and disconnected
 This approach uses Depth First Search (DFS) to find a valid topological order by exploring nodes deeply before adding them to the result.
 
 ## Steps:
-1.    ** **Represent the Graph
+1.    **Represent the Graph:** Use an adjacency list to represent the directed graph.
+2.    **Mark Visited Nodes:** Use a visited array to track visited nodes.
+3.    **DFS Traversal**
+          *    For each unvisited node, perform a DFS traversal.
+          *    Mark the current node as visited.
+          *    Recursively visit all its neighbors.
+          *    Once all neighbors are processed, add the current node to a stack (postorder traversal).
+4.    **Check for Cycle**
+5.    **Build Result:**
