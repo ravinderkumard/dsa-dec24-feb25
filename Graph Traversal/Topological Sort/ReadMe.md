@@ -169,10 +169,10 @@ public class BFSTopologicalSort {
 
 | Aspect | DFS-Based Topological Sort    | Kahn's Algorithm(BFS Based)    |
 | :-----: | :---: | :---: |
-| Traversal Method | DFS   | BFS   |
-| Cycle Detection | Recursion stack   | In-degree not reducing to 0 for all nodes   |
-| Result Construction | Uses a stack(postorder reversal)   | Directly constructs result from queue   |
-| Use case | Preferred for recursive problems   | Prefered for iterative problems  |
+| **Traversal Method** | DFS   | BFS   |
+| **Cycle Detection** | Recursion stack   | In-degree not reducing to 0 for all nodes   |
+| **Result Construction** | Uses a stack(postorder reversal)   | Directly constructs result from queue   |
+| **Use case** | Preferred for recursive problems   | Prefered for iterative problems  |
 
 
 
