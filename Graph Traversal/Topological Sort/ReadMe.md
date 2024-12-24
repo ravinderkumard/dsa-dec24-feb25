@@ -165,3 +165,18 @@ public class BFSTopologicalSort {
 1.    **Graph Represenation:** We used a Map<Integer,List<Integer>> to represent the adjancey List.
 2.    **Cycle Detection:** DFS approach use a boolean[] onPath array, BFS approach check if all nodes are processed.
 3.    **Edge Cases:** Disconnected Graphs, Graph with cycle.
+
+
+
+## Problems:
+### Beginner Level
+    1. Course Schedule (#207)
+    2. Course Schedule II(#210)
+### Intermediate Level
+    1. Alien Dictionary(#269)
+    2. Sequence Representation (#444)
+### Advance Level
+    1. Parallel Courses(#1136)
+    2. Minimum Height Trees(#310)
+    3. Reconstruct Itinerary(#332)
+    4. Course Schedule III(630)
