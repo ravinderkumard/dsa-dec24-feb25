@@ -167,9 +167,15 @@ public class BFSTopologicalSort {
 3.    **Edge Cases:** Disconnected Graphs, Graph with cycle.
 
 
-| Attempt | #1    | #2    |
+| Aspect | DFS-Based Topological Sort    | Kahn's Algorithm(BFS Based)    |
 | :-----: | :---: | :---: |
-| Seconds | 301   | 283   |
+| Traversal Method | DFS   | BFS   |
+| :-----: | :---: | :---: |
+| Cycle Detection | Recursion stack   | In-degree not reducing to 0 for all nodes   |
+| :-----: | :---: | :---: |
+| Result Construction | Uses a stack(postorder reversal)   | Directly constructs result from queue   |
+| :-----: | :---: | :---: |
+| Use case | Preferred for recursive problems   | Prefered for iterative problems  |
 
 
 
