@@ -57,6 +57,60 @@ Constraints:
 	sequences[i] is a subsequence of nums.
 
 
+******************************************************************************************************
+NOTES:
+1. Problem Summary
+	You are given:
+	*. A sequence org (original sequence).
+	*. A list of subsequences seqs.
+The task is to determine whether the sequence org can be uniquely reconstructed from seqs. The reconstruction is valid if:
+	*. It is the only possible sequence.
+	*. It matches the given org.
+
+
+How to Decide the Approach
+The problem can be solved using Topological Sorting because it involves verifying the uniqueness of the order, 
+which aligns well with detecting valid linear orders in a Directed Acyclic Graph (DAG).
+
+
+Here are the steps to decide the approach:
+1. Understand the Problem Requirements
+	Dependencies Between Elements: Each subsequence defines an order of dependencies between the elements.
+		For example, seqs = [[1, 2], [1, 3]] means 1 → 2 and 1 → 3 in the graph.
+	Unique Topological Sort: To ensure the sequence is uniquely reconstructible:
+		At each step in the topological sort, there must be exactly one valid node 
+		(zero in-degree node) to process.
+
+
+2. Decide Between Approaches
+The two main approaches for solving this problem are:
+
+	(A) Topological Sort (Kahn’s Algorithm)
+	When to Use: If the problem involves verifying order dependencies and ensuring uniqueness.
+	Why It Works:
+		It processes nodes in a graph level by level, using the in-degree array to enforce constraints.
+		Ensures uniqueness by verifying that there is exactly one valid node to process at each step.
+	
+	Steps:
+	1. Build a graph and an in-degree array from seqs.
+	2. Use a queue to process nodes with zero in-degree.
+	3. Ensure that there is at most one valid order:
+	4. If the queue contains more than one element at any point, the sequence is not uniquely reconstructible.
+	5. Compare the reconstructed order with org.
+
+	(B) DFS-Based Cycle Detection
+	When to Use: If the problem is more about cycle detection and less about verifying uniqueness.
+	Why It Works:
+		A valid topological order exists only if the graph is acyclic.
+		However, this approach doesn't easily check for uniqueness, so it's less preferred for this problem.
+
+
+3. Key Observations
+Empty or Invalid Input: If seqs is empty or does not cover all elements in org, the answer is false.
+Cycle Detection: If there’s a cycle in the graph, reconstruction is impossible.
+Uniqueness: Use Kahn’s algorithm to verify that there’s only one valid topological order.
+******************************************************************************************************
+
 
 
 
@@ -144,5 +198,81 @@ class Solution {
             }
         }
         return true;
+    }
+}
+
+
+
+
+
+
+import java.util.*;
+
+public class SequenceReconstruction {
+    public boolean sequenceReconstruction(int[] org, List<List<Integer>> seqs) {
+        // Step 1: Build the graph and in-degree array
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        Map<Integer, Integer> inDegree = new HashMap<>();
+        
+        for (int num : org) {
+            graph.put(num, new ArrayList<>());
+            inDegree.put(num, 0);
+        }
+        
+        int n = org.length;
+        boolean validInput = false;
+        
+        for (List<Integer> seq : seqs) {
+            for (int num : seq) {
+                if (!graph.containsKey(num)) return false; // Invalid number in seq
+                validInput = true;
+            }
+            
+            for (int i = 0; i < seq.size() - 1; i++) {
+                int from = seq.get(i), to = seq.get(i + 1);
+                graph.get(from).add(to);
+                inDegree.put(to, inDegree.get(to) + 1);
+            }
+        }
+        
+        if (!validInput) return false; // seqs is empty or invalid
+        
+        // Step 2: Initialize queue with nodes having in-degree 0
+        Queue<Integer> queue = new LinkedList<>();
+        for (int key : inDegree.keySet()) {
+            if (inDegree.get(key) == 0) {
+                queue.offer(key);
+            }
+        }
+        
+        // Step 3: Perform Kahn's Algorithm and ensure uniqueness
+        List<Integer> result = new ArrayList<>();
+        while (!queue.isEmpty()) {
+            if (queue.size() > 1) return false; // More than one valid order
+            
+            int current = queue.poll();
+            result.add(current);
+            
+            for (int neighbor : graph.get(current)) {
+                inDegree.put(neighbor, inDegree.get(neighbor) - 1);
+                if (inDegree.get(neighbor) == 0) {
+                    queue.offer(neighbor);
+                }
+            }
+        }
+        
+        // Step 4: Check if reconstructed order matches `org`
+        return result.size() == n && Arrays.equals(result.stream().mapToInt(i -> i).toArray(), org);
+    }
+    
+    public static void main(String[] args) {
+        SequenceReconstruction sr = new SequenceReconstruction();
+        int[] org = {1, 2, 3};
+        List<List<Integer>> seqs = Arrays.asList(
+            Arrays.asList(1, 2), 
+            Arrays.asList(1, 3),
+            Arrays.asList(2, 3)
+        );
+        System.out.println(sr.sequenceReconstruction(org, seqs)); // Output: true
     }
 }
