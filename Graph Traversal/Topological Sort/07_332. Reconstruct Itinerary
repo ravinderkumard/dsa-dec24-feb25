@@ -47,6 +47,25 @@ Notes:
 
 
 
+***********************************************
+Approaches to Solve
+1. Backtracking
+This approach treats the problem as a graph traversal where you try all possible paths, ensuring all tickets are used exactly once. You backtrack if a path doesn't lead to a valid solution.
+
+Steps:
+Graph Representation:
+
+Represent tickets as an adjacency list where keys are departure airports, and values are sorted lists of arrival airports.
+Use a priority queue or sort the adjacency lists to ensure lexicographical order.
+Backtracking Algorithm:
+
+Start from "JFK".
+At each airport, visit all possible next airports one by one.
+Mark a ticket as used when you visit its destination.
+If you use all tickets and end up with a valid itinerary, return it.
+Backtrack if a dead-end is reached.
+***********************************************
+
 
 import java.util.*;
 
@@ -81,6 +100,22 @@ Space Complexity: O(V+E), for the graph storage and recursion stack.
 
 
 Solution: Hierholzer Algorithm
+
+****************************************************
+2. Hierholzer’s Algorithm
+This approach solves the problem as an Eulerian path problem, which requires visiting all edges exactly once.
+
+Steps:
+Graph Representation:
+
+Build a graph (adjacency list) with departure airports as keys and arrival airports as values (sorted lexicographically).
+Hierholzer’s Algorithm:
+
+Start from "JFK" and follow a path until you reach a dead-end.
+At the dead-end, backtrack and continue to explore unused tickets.
+Record the itinerary in reverse order during backtracking.
+
+****************************************************
 
 import java.util.*;
 
