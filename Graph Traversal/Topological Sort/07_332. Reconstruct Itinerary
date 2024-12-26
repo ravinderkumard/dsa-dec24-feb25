@@ -1,0 +1,242 @@
+
+332. Reconstruct Itinerary
+Hard
+URL: https://leetcode.com/problems/reconstruct-itinerary/description/
+
+
+You are given a list of airline tickets where tickets[i] = [fromi, toi] represent the departure and the arrival airports of one flight. Reconstruct the itinerary in order and return it.
+
+All of the tickets belong to a man who departs from "JFK", thus, the itinerary must begin with "JFK". If there are multiple valid itineraries, you should return the itinerary that has the smallest lexical order when read as a single string.
+
+	For example, the itinerary ["JFK", "LGA"] has a smaller lexical order than ["JFK", "LGB"].
+
+You may assume all tickets form at least one valid itinerary. You must use all the tickets once and only once.
+
+ 
+Example 1:
+
+Input: tickets = [["MUC","LHR"],["JFK","MUC"],["SFO","SJC"],["LHR","SFO"]]
+Output: ["JFK","MUC","LHR","SFO","SJC"]
+
+Example 2:
+
+Input: tickets = [["JFK","SFO"],["JFK","ATL"],["SFO","ATL"],["ATL","JFK"],["ATL","SFO"]]
+Output: ["JFK","ATL","JFK","SFO","ATL","SFO"]
+Explanation: Another possible reconstruction is ["JFK","SFO","ATL","JFK","ATL","SFO"] but it is larger in lexical order.
+
+ 
+Constraints:
+
+	1 <= tickets.length <= 300
+	tickets[i].length == 2
+	fromi.length == 3
+	toi.length == 3
+	fromi and toi consist of uppercase English letters.
+	fromi != toi
+
+
+Notes:
+	1. Create an iternary for source and destination links.
+	2. Call DFS with source
+	
+	DFS(source){
+		if source is part of iternary check for each destination and all dos
+		add source to top of result.
+
+	}
+
+
+
+
+import java.util.*;
+
+public class ReconstructItinerary {
+    public List<String> findItinerary(List<List<String>> tickets) {
+        // Step 1: Build graph
+        Map<String, PriorityQueue<String>> graph = new HashMap<>();
+        for (List<String> ticket : tickets) {
+            graph.putIfAbsent(ticket.get(0), new PriorityQueue<>());
+            graph.get(ticket.get(0)).offer(ticket.get(1));
+        }
+
+        // Step 2: Use a list to store the result
+        LinkedList<String> result = new LinkedList<>();
+
+        // Step 3: Perform backtracking
+        dfs("JFK", graph, result);
+        return result;
+    }
+
+    private void dfs(String airport, Map<String, PriorityQueue<String>> graph, LinkedList<String> result) {
+        PriorityQueue<String> neighbors = graph.get(airport);
+        while (neighbors != null && !neighbors.isEmpty()) {
+            dfs(neighbors.poll(), graph, result);
+        }
+        result.addFirst(airport); // Add airport to result on the way back
+    }
+}
+Time Complexity: O(ElogE), where E is the number of tickets. Sorting the adjacency list costs O(ElogE), and DFS visits all tickets once.
+Space Complexity: O(V+E), for the graph storage and recursion stack.
+
+
+
+Solution: Hierholzer Algorithm
+
+import java.util.*;
+
+public class ReconstructItineraryHierholzer {
+    public List<String> findItinerary(List<List<String>> tickets) {
+        // Step 1: Build graph
+        Map<String, LinkedList<String>> graph = new HashMap<>();
+        for (List<String> ticket : tickets) {
+            graph.putIfAbsent(ticket.get(0), new LinkedList<>());
+            graph.get(ticket.get(0)).add(ticket.get(1));
+        }
+
+        // Step 2: Sort adjacency lists lexicographically
+        for (Map.Entry<String, LinkedList<String>> entry : graph.entrySet()) {
+            Collections.sort(entry.getValue());
+        }
+
+        // Step 3: Use a stack for Hierholzer’s algorithm
+        LinkedList<String> result = new LinkedList<>();
+        Stack<String> stack = new Stack<>();
+        stack.push("JFK");
+
+        while (!stack.isEmpty()) {
+            String current = stack.peek();
+            if (graph.containsKey(current) && !graph.get(current).isEmpty()) {
+                stack.push(graph.get(current).removeFirst());
+            } else {
+                result.addFirst(stack.pop());
+            }
+        }
+
+        return result;
+    }
+
+    public static void main(String[] args) {
+        ReconstructItineraryHierholzer solver = new ReconstructItineraryHierholzer();
+        List<List<String>> tickets = Arrays.asList(
+            Arrays.asList("JFK", "SFO"),
+            Arrays.asList("JFK", "ATL"),
+            Arrays.asList("SFO", "ATL"),
+            Arrays.asList("ATL", "JFK"),
+            Arrays.asList("ATL", "SFO")
+        );
+        System.out.println(solver.findItinerary(tickets)); // Output: [JFK, ATL, JFK, SFO, ATL, SFO]
+    }
+}
+
+
+* Time Complexity: O(ElogE), for sorting adjacency lists.
+* Space Complexity: O(V+E), for the graph and stack.
+
+
+
+
+
+
+Solution : Hierholzer Algorithm
+class Solution {
+    HashMap<String,LinkedList<String>> flightMap = new HashMap<>();
+    LinkedList<String> result = null;
+    public List<String> findItinerary(List<List<String>> tickets) {
+        for(List<String> ticket:tickets){
+            String origin = ticket.get(0);
+            String dest = ticket.get(1);
+            if(flightMap.containsKey(origin)){
+                LinkedList<String> destList = this.flightMap.get(origin);
+                destList.add(dest);
+            } else {
+                LinkedList<String> destList = new LinkedList<>();
+                destList.add(dest);
+                this.flightMap.put(origin,destList);
+            }
+        }   
+        System.out.println("FlighMap : "+flightMap);
+        this.flightMap.forEach((key,value)->Collections.sort(value));
+        System.out.println("FlighMap : "+flightMap);
+        this.result = new LinkedList<>();
+        this.DFS("JFK");
+        return this.result;
+    }
+    private void DFS(String origin){
+        if(this.flightMap.containsKey(origin)){
+            LinkedList<String> destList = flightMap.get(origin);
+            while(!destList.isEmpty()){
+                String dest = destList.pollFirst();
+                DFS(dest);
+            }
+        }
+        this.result.offerFirst(origin);
+    }
+}
+
+
+
+
+Topological Sort(Not Suitable)
+import java.util.*;
+
+public class ReconstructItineraryTopoSort {
+    public List<String> findItinerary(List<List<String>> tickets) {
+        // Step 1: Build graph and in-degree map
+        Map<String, PriorityQueue<String>> graph = new HashMap<>();
+        Map<String, Integer> inDegree = new HashMap<>();
+        Set<String> nodes = new HashSet<>();
+
+        for (List<String> ticket : tickets) {
+            String from = ticket.get(0), to = ticket.get(1);
+            graph.putIfAbsent(from, new PriorityQueue<>());
+            graph.get(from).offer(to);
+
+            inDegree.put(to, inDegree.getOrDefault(to, 0) + 1);
+            inDegree.putIfAbsent(from, 0);
+
+            nodes.add(from);
+            nodes.add(to);
+        }
+
+        // Step 2: Perform topological sort
+        PriorityQueue<String> zeroInDegree = new PriorityQueue<>();
+        for (String node : inDegree.keySet()) {
+            if (inDegree.get(node) == 0) {
+                zeroInDegree.offer(node);
+            }
+        }
+
+        List<String> result = new ArrayList<>();
+        while (!zeroInDegree.isEmpty()) {
+            String current = zeroInDegree.poll();
+            result.add(current);
+
+            PriorityQueue<String> neighbors = graph.getOrDefault(current, new PriorityQueue<>());
+            while (!neighbors.isEmpty()) {
+                String neighbor = neighbors.poll();
+                inDegree.put(neighbor, inDegree.get(neighbor) - 1);
+                if (inDegree.get(neighbor) == 0) {
+                    zeroInDegree.offer(neighbor);
+                }
+            }
+        }
+
+        // Step 3: Validate the result
+        if (result.size() != nodes.size()) {
+            return new ArrayList<>(); // Not all nodes are visited
+        }
+        return result;
+    }
+
+    public static void main(String[] args) {
+        ReconstructItineraryTopoSort solver = new ReconstructItineraryTopoSort();
+        List<List<String>> tickets = Arrays.asList(
+            Arrays.asList("JFK", "SFO"),
+            Arrays.asList("JFK", "ATL"),
+            Arrays.asList("SFO", "ATL"),
+            Arrays.asList("ATL", "JFK"),
+            Arrays.asList("ATL", "SFO")
+        );
+        System.out.println(solver.findItinerary(tickets)); // Output: [JFK, ATL, SFO, ATL, JFK, SFO]
+    }
+}
