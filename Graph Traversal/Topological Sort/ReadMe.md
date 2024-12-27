@@ -178,7 +178,7 @@ public class BFSTopologicalSort {
 
 ## Problems:
 ### Beginner Level
-    1. Course Schedule (#207)
+    1. Course Schedule (#207)   **Also part of Cycle Detection**
     2. Course Schedule II(#210)
 ### Intermediate Level
     1. Alien Dictionary(#269)
@@ -194,7 +194,7 @@ public class BFSTopologicalSort {
 ### Intermediate-Level Problems
     1.    Longest Path in Directed Acyclic Graph(Custom Problem)
     2.    Checking validity of an Alien Dictionary(#953)
-    3.    Find Eventual Safe States(#802)
+    3.    Find Eventual Safe States(#802) **Also part of Cycle Detection**
 ### Advanced-Level Problem
     1.    Minimum Tiime to complete All Tasks(#2050)
     2.    Find All Possible Recipes(#2115)
