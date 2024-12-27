@@ -43,3 +43,26 @@ This approach is particualarly  useful for solving graph connectivity problems i
 
 ![image](https://github.com/user-attachments/assets/0d069c1a-83bb-4b11-8249-9a923c4b83ec)
 
+
+
+## Common Union Find Problems
+1. Number of Connected components in an undirected graph (# 323)
+2. Redundant Connection (#684)
+3. Accounts Merge (#721)
+4. Number of Provinces (#547)
+5. Union Find: Island Count (#200)
+6. Graph Valid Tree (#261)
+7. Smallest String with Swaps(1202)
+8. Regions Cut by Slashes(#959)
+9. Longest Consecutive Sequence (#128)
+10. Account Merge(#947)
+11. Earliest Moment when everyone become friends(#1101)
+12. Merge Intervals(#56)
+13. Friend Circle(#547)
+14. Number of Island II(#305)
+15. The Maze III(#499)
+16. Making a large island(#827)
+17. Find the Celebrity(#277)
+18. Count Unreachable Pairs of Nodes in an undirected graph (#2316)
+19. Minimum cost to connect all points(#1584)
+20. Swim in Rising Water(#778)
