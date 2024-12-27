@@ -1,0 +1,169 @@
+802. Find Eventual Safe States
+URL: https://leetcode.com/problems/find-eventual-safe-states/description/
+
+802. Find Eventual Safe States
+
+There is a directed graph of n nodes with each node labeled from 0 to n - 1. The graph is represented by a 0-indexed 2D integer array graph where graph[i] is an integer array of nodes adjacent to node i, meaning there is an edge from node i to each node in graph[i].
+
+A node is a terminal node if there are no outgoing edges. A node is a safe node if every possible path starting from that node leads to a terminal node (or another safe node).
+
+Return an array containing all the safe nodes of the graph. The answer should be sorted in ascending order.
+
+ 
+Example 1:
+
+Input: graph = [[1,2],[2,3],[5],[0],[5],[],[]]
+Output: [2,4,5,6]
+Explanation: The given graph is shown above.
+Nodes 5 and 6 are terminal nodes as there are no outgoing edges from either of them.
+Every path starting at nodes 2, 4, 5, and 6 all lead to either node 5 or 6.
+
+Example 2:
+
+Input: graph = [[1,2,3,4],[1,2],[3,4],[0,4],[]]
+Output: [4]
+Explanation:
+Only node 4 is a terminal node, and every path starting at node 4 leads to node 4.
+
+ 
+Constraints:
+
+	n == graph.length
+	1 <= n <= 104
+	0 <= graph[i].length <= n
+	0 <= graph[i][j] <= n - 1
+	graph[i] is sorted in a strictly increasing order.
+	The graph may contain self-loops.
+	The number of edges in the graph will be in the range [1, 4 * 104].
+
+
+
+
+How to Decide if Topological Sort Applies
+The problem requires identifying nodes that don't participate in any cycles and only lead to terminal nodes. This aligns closely with topological sorting concepts because:
+1. Topological Sort processes nodes in the reverse order of their dependencies, and a node is only processed when all its dependencies are resolved.
+2. Nodes in cycles cannot be part of a valid topological order because they depend on themselves.
+For this problem, we can treat the graph as a reverse graph and perform a variant of Kahn's Algorithm for Topological Sorting. Here's why:
+* A "safe node" can be thought of as a node that remains in the topological sort, as it has no unresolvable dependencies (i.e., does not participate in a cycle).
+* Terminal nodes (nodes with no outgoing edges) are immediately safe, serving as the starting points for processing.
+
+
+
+
+Approach Using Topological Sort
+To solve this problem using topological sorting, we reverse the graph and apply Kahn's algorithm:
+1. Reverse the Graph:
+    * Create a reverse adjacency list where edges point backward (i.e., u -> v becomes v -> u).
+    * This lets us process dependencies in reverse.
+2. Calculate In-Degree:
+    * Compute the in-degree for each node in the reversed graph.
+3. Perform Topological Sort:
+    * Use a queue to iteratively process nodes with an in-degree of 0 (terminal nodes).
+    * For each node processed, reduce the in-degree of its neighbors. If any neighbor's in-degree becomes 0, add it to the queue.
+4. Extract Safe Nodes:
+    * Nodes processed during the topological sort are safe because they either:
+        * Have no outgoing edges (terminal nodes).
+        * Only lead to nodes that are eventually safe.
+
+
+
+Why Topological Sort Fits
+1. Safe Nodes Resemble Sink Nodes:
+    * Nodes with no outgoing edges or that lead only to terminal nodes align with the concept of "terminal nodes" in a reversed graph.
+2. Cycle Detection:
+    * Topological sorting inherently identifies cycles (nodes left unprocessed in the original graph).
+3. Dependency Resolution:
+    * Nodes with unresolvable dependencies are excluded from the result, as they cannot be processed in the topological order.
+
+
+
+
+Approach 1: Topological Sort Using Kahn's Algorithm
+
+
+class Solution {
+    public List<Integer> eventualSafeNodes(int[][] graph) {
+        int n = graph.length;
+        int[] indegree = new int[n];
+        Map<Integer,List<Integer>> adj = new HashMap<>();
+        for(int i=0;i<n;i++){
+            for(int node:graph[i]){
+                adj.putIfAbsent(node,new ArrayList<>());
+                adj.get(node).add(i);
+                indegree[i]++;
+            }
+        }
+        Queue<Integer> q = new LinkedList<>();
+        for(int i=0;i<n;i++){
+            if(indegree[i]==0){
+                q.add(i);
+            }
+        }
+        boolean[] safe = new boolean[n];
+        while(!q.isEmpty()){
+            int node = q.poll();
+            safe[node] = true;
+            for(int neighbour:adj.getOrDefault(node,new ArrayList<>())){
+                indegree[neighbour]--;
+                if(indegree[neighbour]==0){
+                    q.add(neighbour);
+                }
+            }
+        }
+        List<Integer> safeNodes = new ArrayList<>();
+        for(int i=0;i<n;i++){
+            if(safe[i]){
+                safeNodes.add(i);
+            }
+        }
+        return safeNodes;
+    }
+}
+
+Complexity Analysis
+1. Time Complexity:
+    * Building the reverse graph: O(V+E), where V is the number of nodes and E is the number of edges.
+    * Topological sorting:O(V+E).
+    * Total: O(V+E).
+2. Space Complexity:
+    * O(V+E) for the reverse graph and in-degree array.
+    * O(V) for the queue.
+
+
+
+DFS
+
+class Solution {
+    public List<Integer> eventualSafeNodes(int[][] graph) {
+        int n = graph.length;
+        boolean[] visit = new boolean[n];
+        boolean[] inStack = new boolean[n];
+        for(int i=0;i<n;i++){
+            dfs(i,graph,visit,inStack);
+        }
+        List<Integer> safeNodes = new ArrayList<>();
+        for(int i=0;i<n;i++){
+            if(!inStack[i]){
+                safeNodes.add(i);
+            }
+        }
+        return safeNodes;
+    }
+    private boolean dfs(int node,int[][] graph,boolean[] visit,boolean[] inStack){
+        if(inStack[node]){
+            return true;
+        }
+        if(visit[node]){
+            return false;
+        }
+        visit[node] = true;
+        inStack[node]=true;
+        for(int neighbour:graph[node]){
+            if(dfs(neighbour,graph,visit,inStack)){
+                return true;
+            }
+        }
+        inStack[node]=false;
+        return false;
+    }
+}
