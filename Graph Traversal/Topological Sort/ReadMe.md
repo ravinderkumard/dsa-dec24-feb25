@@ -203,6 +203,6 @@ public class BFSTopologicalSort {
     5.    Maximum number of Tasks you can Assign(#2071)
 ### Challenging Problems with Topological Sort
     1.    Number of Connected Components in an Undirected Graph(#323) (UNION FIND)
-    2.    Longest Increasing Path in a Matrix(#329)
-    3.    All Tasks Scheduling Order(Premium Problem)
-    4.    Find Critical and Pseudo-Critical Edges of MST(#1489)
+    2.    Longest Increasing Path in a Matrix(#329) (BFS/DFS)
+    3.    All Tasks Scheduling Order(Premium Problem) 
+    4.    Find Critical and Pseudo-Critical Edges of MST(#1489) (UNION FIND)
