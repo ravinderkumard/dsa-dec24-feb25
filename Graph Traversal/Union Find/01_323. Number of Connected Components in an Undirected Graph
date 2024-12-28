@@ -1,0 +1,136 @@
+323. Number of Connected Components in an Undirected Graph
+Medium
+
+
+URL: https://leetcode.com/problems/number-of-connected-components-in-an-undirected-graph/description/
+
+
+
+You have a graph of n nodes. You are given an integer n and an array edges where edges[i] = [ai, bi] indicates that there is an edge between ai and bi in the graph.
+
+Return the number of connected components in the graph.
+
+ 
+Example 1:
+
+Input: n = 5, edges = [[0,1],[1,2],[3,4]]
+Output: 2
+
+Example 2:
+
+Input: n = 5, edges = [[0,1],[1,2],[2,3],[3,4]]
+Output: 1
+
+ 
+Constraints:
+
+	1 <= n <= 2000
+	1 <= edges.length <= 5000
+	edges[i].length == 2
+	0 <= ai <= bi < n
+	ai != bi
+	There are no repeated edges.
+
+NOtes:
+Union Find
+1. Find the parent for each and mark them to self.
+2. Define rank and set all to 1.
+3. Set result = n// number of edges;
+4. For each edge, run union(edg0, edge1)==true; decrease result by 1;
+union(x,y)
+1. Find parent of x and y
+2. If both are same return true; //refer to same group
+3. If rank(p2)>rank(p1) => parent[p1] = p2 // Group them if not in a group re-arrange based upon the rank. Update ranking
+4. If rank(p1)>rank(p2) = > parent[p2] = p1
+5. Return false;
+6.  
+
+
+class Solution {
+    private int[] parent;
+    private int[] rank;
+    public int countComponents(int n, int[][] edges) {
+        parent = new int[n];
+        rank = new int[n];
+        for(int i=0;i<n;i++){
+            parent[i]=i;
+            rank[i] = 1;
+        }
+        int result = n;
+        for(int i=0;i<edges.length;i++){
+            if(union(edges[i][0],edges[i][1])==1){
+                result--;
+            }
+        }
+        return result;
+    }
+    private int find(int node){
+        int result = node;
+        while(parent[result]!=result){
+            parent[result] = parent[parent[result]];
+            result = parent[result];
+        }
+        return result;
+    }
+    private int union(int n1,int n2){
+        int p1 = this.find(n1);
+        int p2 = this.find(n2);
+        if(p1==p2){
+            return 0;
+        }
+        if(rank[p2]>rank[p1]){
+            parent[p1] = p2;
+            rank[p2]+=rank[p1];
+        } else {
+            parent[p2] = p1;
+            rank[p1]+=rank[p2];
+        }
+        return 1;
+    }
+}
+
+
+
+
+
+class Solution {
+    int[] parent;
+    int[] rank;
+    public int countComponents(int n, int[][] edges) {
+        parent = new int[n];
+        rank = new int[n];
+        for(int i=0;i<n;i++){
+            parent[i] = i;
+            rank[i] = 0;
+        }
+        int result = n;
+        for(int i=0;i<edges.length;i++){
+            if(union(edges[i][0],edges[i][1])){
+                result--;
+            }
+        }
+        return result;
+    }
+    private int find(int x){
+        if(parent[x]!=x){
+            parent[x] = find(parent[x]);
+        }
+        return parent[x];
+    }
+    private boolean union(int x,int y){
+        int findX = find(x);
+        int findY = find(y);
+        if(findX==findY){
+            return false;
+        }
+        if(rank[findX]>rank[findY]){
+            parent[findY] = findX;
+        } else if(rank[findY]>rank[findX]){
+            parent[findX] = findY;
+        } else {
+            parent[findY] = findX;
+            rank[findX]++;
+        }
+        return true;
+    }
+}
