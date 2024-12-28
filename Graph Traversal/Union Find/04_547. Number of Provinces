@@ -1,0 +1,140 @@
+547. Number of Provinces
+
+There are n cities. Some of them are connected, while some are not. If city a is connected directly with city b, and city b is connected directly with city c, then city a is connected indirectly with city c.
+A province is a group of directly or indirectly connected cities and no other cities outside of the group.
+You are given an n x n matrix isConnected where isConnected[i][j] = 1 if the ith city and the jth city are directly connected, and isConnected[i][j] = 0 otherwise.
+Return the total number of provinces.
+Example 1:
+￼
+Input: isConnected = [[1,1,0],[1,1,0],[0,0,1]]
+Output: 2
+Example 2:
+￼
+
+Intuition: Solve Using DFS technique where every non connected node will be count and marked visited as true and following DFS on connected nodes.
+
+class Solution {
+    public int findCircleNum(int[][] isConnected) {
+        int count = 0;
+        int n = isConnected.length;
+        boolean[] visited = new boolean[n];
+
+        for(int i=0;i<n;i++){
+            if(!visited[i]){
+                count++;
+                dfs(isConnected,visited,i);
+            }
+        }
+        return count;
+    }
+    public void dfs(int[][] isConnected, boolean[] visited, int idx){
+        visited[idx] = true;
+        for(int neighbour = 0; neighbour<isConnected.length;neighbour++){
+            if(!visited[neighbour] && isConnected[idx][neighbour]==1){
+                dfs(isConnected,visited,neighbour);
+            }
+        }
+    }
+}
+
+
+
+class UnionFind{
+    int[] parent;
+    int[] rank;
+    public UnionFind(int size){
+        parent = new int[size];
+        for(int i=0;i<size;i++){
+            parent[i] = i;
+        }
+        rank = new int[size];
+    }
+    public int find(int x){
+        if(parent[x] !=x){
+            parent[x] = find(parent[x]);
+        }
+        return parent[x];
+    }
+    public void unionSet(int x,int y){
+        int xSet = find(x);
+        int ySet = find(y);
+        if(xSet==ySet){
+            return;
+        } else if(rank[xSet]<rank[ySet]){
+            parent[xSet] = ySet;
+        } else if(rank[xSet]>rank[ySet]){
+            parent[ySet] = xSet;
+        } else {
+            parent[ySet] = xSet;
+            rank[xSet]++;
+        }
+    }
+}
+class Solution {
+        
+    public int findCircleNum(int[][] isConnected) {
+        int n = isConnected.length;
+        UnionFind dsu = new UnionFind(n);
+        int numberOfComponents = n;
+        for(int i=0;i<n;i++){
+            for(int j=i+1;j<n;j++){
+                if(isConnected[i][j]==1 && dsu.find(i)!=dsu.find(j)){
+                    numberOfComponents--;
+                    dsu.unionSet(i, j);
+                }
+            }
+        }
+        return numberOfComponents;
+    }
+}
+
+
+
+
+
+class Solution {
+    int[] parent;
+    int[] rank;
+    public int findCircleNum(int[][] isConnected) {
+        int n = isConnected.length;
+        parent = new int[n+1];
+        rank = new int[n+1];
+        for(int i=1;i<=n;i++){
+            parent[i] = i;
+            rank[i] = 1;
+
+        }
+        int numberofComponents = n;
+        for(int i=0;i<n;i++){
+            for(int j=i+1;j<n;j++){
+                if(isConnected[i][j]==1 && find(i)!=find(j)){
+                    numberofComponents--;
+                    union(i,j);
+                }
+            }
+        }
+        return numberofComponents;
+    }
+    private int find(int x){
+        if(x!=parent[x]){
+            x = find(parent[x]);
+        }
+        return x;
+    }
+    private int union(int i,int j){
+        int findX = find(i);
+        int findY = find(j);
+
+        if(findX==findY){
+            return 0;
+        }
+        if(rank[findX]>=rank[findY]){
+            parent[findY] = findX;
+            rank[findX]++;
+        } else {
+            parent[findX] = findY;
+            rank[findY]++;
+        }
+        return 1;
+    }
+}
