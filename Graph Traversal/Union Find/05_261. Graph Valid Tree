@@ -1,0 +1,143 @@
+
+261. Graph Valid Tree
+Medium
+
+URL: https://leetcode.com/problems/graph-valid-tree/description/
+
+You have a graph of n nodes labeled from 0 to n - 1. You are given an integer n and a list of edges where edges[i] = [ai, bi] indicates that there is an undirected edge between nodes ai and bi in the graph.
+
+Return true if the edges of the given graph make up a valid tree, and false otherwise.
+
+ 
+Example 1:
+
+Input: n = 5, edges = [[0,1],[0,2],[0,3],[1,4]]
+Output: true
+
+Example 2:
+
+Input: n = 5, edges = [[0,1],[1,2],[2,3],[1,3],[1,4]]
+Output: false
+
+ 
+Constraints:
+
+	1 <= n <= 2000
+	0 <= edges.length <= 5000
+	edges[i].length == 2
+	0 <= ai, bi < n
+	ai != bi
+	There are no self-loops or repeated edges.
+
+
+
+class UnionFind {
+    private int[] parent;
+    private int[] size;
+    public UnionFind(int n){
+        parent = new int[n];
+        size = new int[n];
+        for(int node = 0;node<n;node++){
+            parent[node] = node;
+            size[node] = 1;
+        }
+    }
+    public int find(int A){
+        int root = A;
+        while(parent[root]!=root){
+            root = parent[root];
+        }
+
+        while(A!=root){
+            int oldRoot = parent[A];
+            parent[A] = root;
+            A= oldRoot;
+        }
+        return root;
+    }
+    public boolean union(int A,int B){
+        int rootA = find(A);
+        int rootB = find(B);
+        if(rootA==rootB){
+            return false;
+        }
+        if(size[rootA]<size[rootB]){
+            parent[rootA] = rootB;
+            size[rootB]+=size[rootA];
+        } else {
+            parent[rootB] = rootA;
+            size[rootA]+=size[rootB];
+        }
+        return true;
+    }
+}
+class Solution {
+    int[] parent;
+    public boolean validTree(int n, int[][] edges) {
+        if(edges.length!=n-1){
+            return false;
+        }
+        UnionFind unionFind = new UnionFind(n);
+        for(int[] edge:edges){
+            int A = edge[0];
+            int B = edge[1];
+            if(!unionFind.union(A,B)){
+                return false;
+            }
+        }
+        return true;
+    }
+   
+}
+
+
+
+
+
+
+
+class Solution {
+    int[] parent;
+    int[] rank;
+    public boolean validTree(int n, int[][] edges) {
+        if(edges.length!=n-1){
+            return false;
+        }
+        parent = new int[n];
+        rank = new int[n];
+        for(int i=0;i<n;i++){
+            parent[i] = i;
+            rank[i] = 1;
+        }
+        for(int[] edge:edges){
+            if(!union(edge[0],edge[1])){
+                return false;
+            }
+        }
+        return true;
+    }
+    private int find(int x){
+        int result = x;
+        while(parent[result]!=result){
+            parent[result] = parent[parent[result]];
+            result = parent[result];
+        }
+        return result;
+    }
+    private boolean union(int x,int y){
+        int p1 = find(x);
+        int p2 = find(y);
+        if(p1==p2){
+            return false;
+        }
+        if(rank[p1]>rank[p2]){
+            parent[p1] = p2;
+            rank[p2]+=rank[p1];
+        } else {
+            parent[p2] = p1;
+            rank[p1]+=rank[p2];
+        }
+        return true;
+    }
+}
+
