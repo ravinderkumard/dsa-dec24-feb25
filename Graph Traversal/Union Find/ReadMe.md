@@ -57,7 +57,7 @@ This approach is particualarly  useful for solving graph connectivity problems i
 9. Number of Operations to Make Network Connected(1319)
 10. Regions Cut by Slashes(#959)
 11. Longest Consecutive Sequence (#128)
-12. Account Merge(#947)
+12. Most Stones Removed with Same Row or Column(#947)
 13. Earliest Moment when everyone become friends(#1101)
 14. Merge Intervals(#56)
 15. Friend Circle(#547)
