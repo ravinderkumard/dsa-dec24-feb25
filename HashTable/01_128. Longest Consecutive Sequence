@@ -97,3 +97,68 @@ class Solution {
         return Math.max(longestStreak, currentStreak);
     }
 }
+
+
+
+******************************************************************************************************************************************************************
+
+
+
+
+class UnionFind{
+      Map<Integer, Integer> parent;
+      Map<Integer, Integer> rank;
+    UnionFind(){
+        parent = new HashMap<>();
+        rank = new HashMap<>();
+    }
+    void add(int x){
+        if(!parent.containsKey(x)){
+            parent.put(x,x);
+            rank.put(x,1);
+        }
+    }
+    int find(int x){
+        if(parent.get(x)!=x){
+            parent.put(x,find(parent.get(x)));
+        }
+        return parent.get(x);
+    }
+    void union(int x,int y){
+        int findX = find(x);
+        int findY = find(y);
+        if(findX!=findY){
+            if(rank.get(findX)>rank.get(findY)){
+                parent.put(findY,findX);
+                rank.put(findX,rank.get(findX)+rank.get(findY));
+            } else {
+                parent.put(findX,findY);
+                rank.put(findY,rank.get(findY)+rank.get(findX));
+            }
+        }
+    }
+    int getRank(int x){
+        return rank.get(find(x));
+    }
+}
+class Solution {
+    public int longestConsecutive(int[] nums) {
+        if(nums==null||nums.length==0){
+            return 0;
+        }
+        UnionFind uf = new UnionFind();
+        for(int num:nums){
+            uf.add(num);
+        }
+        for(int num:nums){
+            if(uf.parent.containsKey(num+1)){
+                uf.union(num,num+1);
+            }
+        }
+        int maxLength = 0;
+        for(int num:nums){
+            maxLength = Math.max(maxLength,uf.getRank(num));
+        }
+        return maxLength;
+    }
+}
