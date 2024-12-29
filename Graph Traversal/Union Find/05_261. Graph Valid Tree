@@ -141,3 +141,56 @@ class Solution {
     }
 }
 
+
+
+class UnionFind{
+    private int[] parent;
+    private int[] rank;
+    public UnionFind(int n){
+        parent = new int[n];
+        rank = new int[n];
+        for(int i=0;i<n;i++){
+            parent[i] = i;
+            rank[i] = 1;
+        }
+    }
+        public int find(int x){
+            int result = x;
+            while(parent[result]!=result){
+                parent[result] = parent[parent[result]];
+                result = parent[result];
+            }
+            return result;
+        }
+        public boolean union(int x,int y){
+            int findX = find(x);
+            int findY = find(y);
+            if(findX==findY){
+                return false;
+            }
+            if(rank[findY]>rank[findX]){
+                parent[findX] = findY;
+                rank[findY]+=rank[findX];
+            } else {
+                parent[findY] = findX;
+                rank[findX]+=rank[findY];
+            }
+            return true;
+        }
+    
+}
+
+class Solution {
+    public boolean validTree(int n, int[][] edges) {
+        if(edges.length!=n-1){
+            return false;
+        }
+        UnionFind uf = new UnionFind(n);
+        for(int[] edge:edges){
+            if(!uf.union(edge[0],edge[1])){
+                return false;
+            }
+        }
+        return true;
+    }
+}
