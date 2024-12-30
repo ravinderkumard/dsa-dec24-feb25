@@ -1,0 +1,149 @@
+305. Number of Islands II
+
+
+URL: https://leetcode.com/problems/number-of-islands-ii/description/
+
+305. Number of Islands II
+
+You are given an empty 2D binary grid grid of size m x n. The grid represents a map where 0's represent water and 1's represent land. Initially, all the cells of grid are water cells (i.e., all the cells are 0's).
+
+We may perform an add land operation which turns the water at position into a land. You are given an array positions where positions[i] = [ri, ci] is the position (ri, ci) at which we should operate the ith operation.
+
+Return an array of integers answer where answer[i] is the number of islands after turning the cell (ri, ci) into a land.
+
+An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.
+
+ 
+Example 1:
+
+Input: m = 3, n = 3, positions = [[0,0],[0,1],[1,2],[2,1]]
+Output: [1,1,2,3]
+Explanation:
+Initially, the 2d grid is filled with water.
+- Operation #1: addLand(0, 0) turns the water at grid[0][0] into a land. We have 1 island.
+- Operation #2: addLand(0, 1) turns the water at grid[0][1] into a land. We still have 1 island.
+- Operation #3: addLand(1, 2) turns the water at grid[1][2] into a land. We have 2 islands.
+- Operation #4: addLand(2, 1) turns the water at grid[2][1] into a land. We have 3 islands.
+
+Example 2:
+
+Input: m = 1, n = 1, positions = [[0,0]]
+Output: [1]
+
+ 
+Constraints:
+
+	1 <= m, n, positions.length <= 104
+	1 <= m * n <= 104
+	positions[i].length == 2
+	0 <= ri < m
+	0 <= ci < n
+
+ 
+Follow up: Could you solve it in time complexity O(k log(mn)), where k == positions.length?
+
+
+Problem Intuition
+* An island is a group of connected 1s (land) surrounded by 0s (water).
+* You start with an empty grid (all 0s), and land (1) is added incrementally at given positions.
+* The task is to count the number of islands after each addition.
+Key insights:
+1. Dynamic Addition: The grid evolves over time as land is added.
+2. Union-Find: Adding land can merge existing islands, reducing the total count.
+
+
+Approach
+1. Grid Representation
+* Represent the grid using rows and columns.
+* Use a Union-Find structure to track connected components (islands).
+2. Union-Find Logic
+* Treat each cell in the grid as a node in a graph.
+* When land is added:
+    * Initialize it as a new island.
+    * Check its neighbors (up, down, left, right). If any neighbor is already land, merge the current cell with that neighbor's island.
+3. Counting Islands
+* Maintain a count of islands.
+* Adding a new land increases the count by 1.
+* If merging occurs, decrement the count by the number of merges.
+
+
+
+
+class UnionFind{
+    int[] parent;
+    int[] rank;
+    int count;
+    UnionFind(int n){
+        parent = new int[n];
+        rank = new int[n];
+        count = 0;
+        for(int i=0;i<n;i++){
+            parent[i] = -1;
+        }
+    }
+    int find(int x){
+        if(parent[x]!=x){
+            parent[x] = find(parent[x]);
+        }
+        return parent[x];
+    }
+    void union(int x, int y){
+        int findX = find(x);
+        int findY = find(y);
+        if(findX==findY){
+            return;
+        }
+        if(rank[findY]>rank[findX]){
+            parent[findX] = findY;
+            rank[findY]+=rank[findX];
+        } else {
+            parent[findY] = findX;
+            rank[findX]+=rank[findY];
+        }
+        count--;
+    }
+    void addLand(int x){
+        if(parent[x]>=0){
+            return;
+        }
+        parent[x] = x;
+        count++;
+    }
+    public boolean isLand(int x){
+        if(parent[x]>=0){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public int numberOfIslands(){
+        return count;
+    }
+}
+
+class Solution {
+    public List<Integer> numIslands2(int m, int n, int[][] positions) {
+        List<Integer> result = new ArrayList<>();
+        UnionFind uf = new UnionFind(m*n);
+        int[][] dirs = {{0,1},{0,-1},{1,0},{-1,0}};
+        for(int[] position:positions){
+            int row = position[0];
+            int col = position[1];
+            int index = row*n+col;
+            uf.addLand(index);
+            for(int[] dir:dirs){
+                int newRow = row+dir[0];
+                int newCol = col+dir[1];
+                int nextIndex = newRow*n+newCol;
+                if(newRow>=0 && newRow<m && newCol>=0 && newCol<n && uf.isLand(nextIndex)){
+                    uf.union(index, nextIndex);
+                }
+            }
+            result.add(uf.numberOfIslands());
+        }
+        return result;
+    }
+}
+
+Time Complexity: O(k⋅α(n⋅m)): k = number of positions and α is the inverse Ackermann function.
+Space Complexity: O(m.n) => REsult LIst = O(k)
