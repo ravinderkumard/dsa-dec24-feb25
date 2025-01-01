@@ -1,0 +1,450 @@
+
+743. Network Delay Time
+
+URL: https://leetcode.com/problems/network-delay-time/description/
+
+You are given a network of n nodes, labeled from 1 to n. You are also given times, a list of travel times as directed edges times[i] = (ui, vi, wi), where ui is the source node, vi is the target node, and wi is the time it takes for a signal to travel from source to target.
+
+We will send a signal from a given node k. Return the minimum time it takes for all the n nodes to receive the signal. If it is impossible for all the n nodes to receive the signal, return -1.
+
+ 
+Example 1:
+
+Input: times = [[2,1,1],[2,3,1],[3,4,1]], n = 4, k = 2
+Output: 2
+
+Example 2:
+
+Input: times = [[1,2,1]], n = 2, k = 1
+Output: 1
+
+Example 3:
+
+Input: times = [[1,2,1]], n = 2, k = 2
+Output: -1
+
+ 
+Constraints:
+
+	1 <= k <= n <= 100
+	1 <= times.length <= 6000
+	times[i].length == 3
+	1 <= ui, vi <= n
+	ui != vi
+	0 <= wi <= 100
+	All the pairs (ui, vi) are unique. (i.e., no multiple edges.)
+
+
+****************************************************
+
+
+class Solution {
+    public int networkDelayTime(int[][] times, int n, int k) {
+        int source = k;
+        Map<Integer,List<Pair<Integer,Integer>>> adj = new HashMap<>();
+        for(int[] time:times){
+            int src = time[0];
+            int dest = time[1];
+            int travelTime = time[2];
+            adj.putIfAbsent(src,new ArrayList<>());
+            adj.get(src).add(new Pair(travelTime,dest));
+           
+        }
+        int[] signalReceivedAt = new int[n+1];
+        Arrays.fill(signalReceivedAt,Integer.MAX_VALUE);
+       
+        
+        Queue<Pair<Integer, Integer>> pq = new PriorityQueue<Pair<Integer,Integer>>
+            (Comparator.comparing(Pair::getKey));
+        pq.add(new Pair(0, source));
+        
+        // Time for starting node is 0
+        signalReceivedAt[source] = 0;
+        
+        while (!pq.isEmpty()) {
+            Pair<Integer, Integer> topPair = pq.remove();
+            
+            int currNode = topPair.getValue();
+            int currNodeTime = topPair.getKey();
+            
+            if (currNodeTime > signalReceivedAt[currNode]) {
+                continue;
+            }
+            
+            if (!adj.containsKey(currNode)) {
+                continue;
+            }
+            
+            // Broadcast the signal to adjacent nodes
+            for (Pair<Integer, Integer> edge : adj.get(currNode)) {
+                int time = edge.getKey();
+                int neighborNode = edge.getValue();
+                
+                // Fastest signal time for neighborNode so far
+                // signalReceivedAt[currNode] + time : 
+                // time when signal reaches neighborNode
+                if (signalReceivedAt[neighborNode] > currNodeTime + time) {
+                    signalReceivedAt[neighborNode] = currNodeTime + time;
+                    pq.add(new Pair(signalReceivedAt[neighborNode], neighborNode));
+                }
+            }
+        }
+        
+
+        int ans = Integer.MIN_VALUE;
+        for(int i=1;i<=n;i++){
+            ans = Math.max(ans,signalReceivedAt[i]);
+        }
+
+        return ans==Integer.MAX_VALUE?-1:ans;
+    }
+}
+*************************************************************
+
+
+
+
+class Solution {
+    public int networkDelayTime(int[][] times, int n, int k) {
+        int source = k;
+        Map<Integer,List<Pair<Integer,Integer>>> adj = new HashMap<>();
+        for(int[] time:times){
+            int src = time[0];
+            int dest = time[1];
+            int travelTime = time[2];
+            adj.putIfAbsent(src,new ArrayList<>());
+            adj.get(src).add(new Pair(travelTime,dest));
+           
+        }
+        int[] signalReceivedAt = new int[n+1];
+        Arrays.fill(signalReceivedAt,Integer.MAX_VALUE);
+       
+        
+       dijkstra(signalReceivedAt, source, n, adj);
+        
+
+        int ans = Integer.MIN_VALUE;
+        for(int i=1;i<=n;i++){
+            ans = Math.max(ans,signalReceivedAt[i]);
+        }
+
+        return ans==Integer.MAX_VALUE?-1:ans;
+    }
+
+    private void dijkstra(int[] signalReceivedAt,int source,int n,Map<Integer,List<Pair<Integer,Integer>>> adj){
+         Queue<Pair<Integer, Integer>> pq = new PriorityQueue<Pair<Integer,Integer>>
+            (Comparator.comparing(Pair::getKey));
+        pq.add(new Pair(0, source));
+        
+        // Time for starting node is 0
+        signalReceivedAt[source] = 0;
+        
+        while (!pq.isEmpty()) {
+            Pair<Integer, Integer> topPair = pq.remove();
+            
+            int currNode = topPair.getValue();
+            int currNodeTime = topPair.getKey();
+            
+            if (currNodeTime > signalReceivedAt[currNode]) {
+                continue;
+            }
+            
+            if (!adj.containsKey(currNode)) {
+                continue;
+            }
+            
+            // Broadcast the signal to adjacent nodes
+            for (Pair<Integer, Integer> edge : adj.get(currNode)) {
+                int time = edge.getKey();
+                int neighborNode = edge.getValue();
+                
+                // Fastest signal time for neighborNode so far
+                // signalReceivedAt[currNode] + time : 
+                // time when signal reaches neighborNode
+                if (signalReceivedAt[neighborNode] > currNodeTime + time) {
+                    signalReceivedAt[neighborNode] = currNodeTime + time;
+                    pq.add(new Pair(signalReceivedAt[neighborNode], neighborNode));
+                }
+            }
+        }
+    }
+}
+
+
+*****************************************************************************
+
+
+class Solution {
+    public int networkDelayTime(int[][] times, int n, int k) {
+        int source = k;
+        Map<Integer,List<Pair<Integer,Integer>>> adj = new HashMap<>();
+        for(int[] time:times){
+            int src = time[0];
+            int dest = time[1];
+            int travelTime = time[2];
+            adj.putIfAbsent(src,new ArrayList<>());
+            adj.get(src).add(new Pair(travelTime,dest));
+           
+        }
+
+        for(int node:adj.keySet()){
+            Collections.sort(adj.get(node),(a,b)->a.getKey()-b.getKey());
+        }
+
+        int[] signalReceivedAt = new int[n+1];
+        Arrays.fill(signalReceivedAt,Integer.MAX_VALUE);
+       
+        
+       dfs(signalReceivedAt, source, 0, adj); 
+        
+
+        int ans = Integer.MIN_VALUE;
+        for(int i=1;i<=n;i++){
+            ans = Math.max(ans,signalReceivedAt[i]);
+        }
+
+        return ans==Integer.MAX_VALUE?-1:ans;
+    }
+
+    private void dfs(int[] signalReceivedAt,int currNode,int currTime,Map<Integer,List<Pair<Integer,Integer>>> adj){
+        if(currTime>=signalReceivedAt[currNode]){
+            return;
+        }
+        signalReceivedAt[currNode] = currTime;
+        if(!adj.containsKey(currNode)){
+            return;
+        }
+        for(Pair<Integer,Integer> edge:adj.get(currNode)){
+            int travelTime = edge.getKey();
+            int neigbhourNode = edge.getValue();
+            dfs(signalReceivedAt, neigbhourNode, currTime+travelTime, adj);
+        }
+    }   
+}
+
+
+
+
+**********************************************************************
+
+
+
+
+
+
+class Solution {
+    public int networkDelayTime(int[][] times, int n, int k) {
+        int[] paths = new int[n];
+        Arrays.fill(paths,Integer.MAX_VALUE);
+        paths[k-1] = 0;
+        for(int i=0;i<n;i++){
+            int[] temp = new int[n];
+            temp = Arrays.copyOf(paths,paths.length);
+            for(int j=0;j<times.length;j++){
+                int src = times[j][0];
+                int dest = times[j][1];
+                int weight = times[j][2];
+                if(temp[src-1]!=Integer.MAX_VALUE&& temp[src-1]+weight<temp[dest-1]){
+                    temp[dest-1] = temp[src-1]+weight;
+                }
+            }
+            paths = temp;
+        }
+        int result = Integer.MIN_VALUE;
+        for(int i=0;i<n;i++){
+            if(paths[i]==Integer.MAX_VALUE){
+                return -1;
+            }
+            result = Math.max(result,paths[i]);
+        }
+        return result;
+    }
+}
+
+********************************************************************
+
+
+Solution 2
+
+class Solution {
+    Map<Integer,List<Pair<Integer,Integer>>> adj = new HashMap<>();
+    public int networkDelayTime(int[][] times, int n, int k) {
+        for(int[] time:times){
+            int source = time[0];
+            int dest = time[1];
+            int travelTime = time[2];
+            adj.putIfAbsent(source,new ArrayList<>());
+            adj.get(source).add(new Pair(travelTime,dest));
+        }
+        System.out.println(adj);
+        for(int node:adj.keySet()){
+            Collections.sort(adj.get(node),(a,b)->a.getKey()-b.getKey());
+        }
+        System.out.println(adj);
+        int[] signalReceivedAt = new int[n+1];
+        Arrays.fill(signalReceivedAt,Integer.MAX_VALUE);
+        DFS(signalReceivedAt,k,0);
+        int answer = Integer.MIN_VALUE;
+        for(int node =1;node<=n;node++){
+            answer = Math.max(answer,signalReceivedAt[node]);
+        }
+        return answer == Integer.MAX_VALUE?-1:answer;
+    }
+    private void DFS(int[] signalReceivedAt,int currNode,int currTime){
+        if(currTime>=signalReceivedAt[currNode]){
+            return;
+        }
+        signalReceivedAt[currNode] = currTime;
+        if(!adj.containsKey(currNode)){
+            return;
+        }
+        for(Pair<Integer,Integer> edge:adj.get(currNode)){
+            int travelTime = edge.getKey();
+            int neighborNode = edge.getValue();
+            DFS(signalReceivedAt,neighborNode,currTime+travelTime);
+        }
+    }
+}
+
+
+Solution 3: Dijkstra’s Algorithm
+
+class Solution {
+    // Adjacency list
+    Map<Integer, List<Pair<Integer, Integer>>> adj = new HashMap<>();
+    
+    private void dijkstra(int[] signalReceivedAt, int source, int n) {
+        Queue<Pair<Integer, Integer>> pq = new PriorityQueue<Pair<Integer,Integer>>
+            (Comparator.comparing(Pair::getKey));
+        pq.add(new Pair(0, source));
+        
+        // Time for starting node is 0
+        signalReceivedAt[source] = 0;
+        
+        while (!pq.isEmpty()) {
+            Pair<Integer, Integer> topPair = pq.remove();
+            
+            int currNode = topPair.getValue();
+            int currNodeTime = topPair.getKey();
+            
+            if (currNodeTime > signalReceivedAt[currNode]) {
+                continue;
+            }
+            
+            if (!adj.containsKey(currNode)) {
+                continue;
+            }
+            
+            // Broadcast the signal to adjacent nodes
+            for (Pair<Integer, Integer> edge : adj.get(currNode)) {
+                int time = edge.getKey();
+                int neighborNode = edge.getValue();
+                
+                // Fastest signal time for neighborNode so far
+                // signalReceivedAt[currNode] + time : 
+                // time when signal reaches neighborNode
+                if (signalReceivedAt[neighborNode] > currNodeTime + time) {
+                    signalReceivedAt[neighborNode] = currNodeTime + time;
+                    pq.add(new Pair(signalReceivedAt[neighborNode], neighborNode));
+                }
+            }
+        }
+    }
+    
+    public int networkDelayTime(int[][] times, int n, int k) {
+        // Build the adjacency list
+        for (int[] time : times) {
+            int source = time[0];
+            int dest = time[1];
+            int travelTime = time[2];
+            
+            adj.putIfAbsent(source, new ArrayList<>());
+            adj.get(source).add(new Pair(travelTime, dest));
+        }
+        
+        int[] signalReceivedAt = new int[n + 1];
+        Arrays.fill(signalReceivedAt, Integer.MAX_VALUE);
+        
+        dijkstra(signalReceivedAt, k, n);
+        
+        int answer = Integer.MIN_VALUE;
+        for (int i = 1; i <= n; i++) {
+            answer = Math.max(answer, signalReceivedAt[i]);
+        }
+        
+        // INT_MAX signifies atleat one node is unreachable
+        return answer == Integer.MAX_VALUE ? -1 : answer;
+    }
+}
+
+
+
+
+
+class Solution {
+    // Adjacency list
+    Map<Integer, List<Pair<Integer, Integer>>> adj = new HashMap<>();
+    
+    private void dijkstra(int[] signalReceivedAt, int source, int n) {
+        Queue<Pair<Integer, Integer>> pq = new PriorityQueue<Pair<Integer,Integer>>
+            (Comparator.comparing(Pair::getKey));
+        pq.add(new Pair(0, source));
+        
+        // Time for starting node is 0
+        signalReceivedAt[source] = 0;
+        
+        while (!pq.isEmpty()) {
+            Pair<Integer, Integer> topPair = pq.remove();
+            
+            int currNode = topPair.getValue();
+            int currNodeTime = topPair.getKey();
+            
+            if (currNodeTime > signalReceivedAt[currNode]) {
+                continue;
+            }
+            
+            if (!adj.containsKey(currNode)) {
+                continue;
+            }
+            
+            // Broadcast the signal to adjacent nodes
+            for (Pair<Integer, Integer> edge : adj.get(currNode)) {
+                int time = edge.getKey();
+                int neighborNode = edge.getValue();
+                
+                // Fastest signal time for neighborNode so far
+                // signalReceivedAt[currNode] + time : 
+                // time when signal reaches neighborNode
+                if (signalReceivedAt[neighborNode] > currNodeTime + time) {
+                    signalReceivedAt[neighborNode] = currNodeTime + time;
+                    pq.add(new Pair(signalReceivedAt[neighborNode], neighborNode));
+                }
+            }
+        }
+    }
+    
+    public int networkDelayTime(int[][] times, int n, int k) {
+        // Build the adjacency list
+        for (int[] time : times) {
+            int source = time[0];
+            int dest = time[1];
+            int travelTime = time[2];
+            
+            adj.putIfAbsent(source, new ArrayList<>());
+            adj.get(source).add(new Pair(travelTime, dest));
+        }
+        
+        int[] signalReceivedAt = new int[n + 1];
+        Arrays.fill(signalReceivedAt, Integer.MAX_VALUE);
+        
+        dijkstra(signalReceivedAt, k, n);
+        
+        int answer = Integer.MIN_VALUE;
+        for (int i = 1; i <= n; i++) {
+            answer = Math.max(answer, signalReceivedAt[i]);
+        }
+        
+        // INT_MAX signifies atleat one node is unreachable
+        return answer == Integer.MAX_VALUE ? -1 : answer;
+    }
+}
