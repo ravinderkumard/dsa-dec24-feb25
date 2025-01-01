@@ -87,7 +87,7 @@ Dijkstra's algorithm is a graph traversal technique used to find the shortest pa
 	4. Shortest Path in a Grid with Obstacles Elimination (#1293)
 		Shortest Path in a grid with obstacles you can eliminate.
 		**Key Insight**: Use Dijkstra or BFS with additional state tracking.
-	5. Swin in Rising Water (#778)
+	5. Swin in Rising Water (#778) Part of Union find also
 		Minimize the maximum water level required to reach the bottom-right corner
 		**Key Insight**: Use a priority queue to minimize the maximum "cost" on the path.
 	6. Minimum Cost to Reach Destination in Time(#1928).
