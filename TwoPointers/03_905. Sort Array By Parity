@@ -35,6 +35,11 @@ Define 2 pointer left and right
 check if module 2 for left is greater than module 2 for right element that mean left element is odd and right is even,
 Swap the numbers
 if left is even move left pointer to next
+
+Approach 3;
+Use 2 pointer pointing to 0th location
+if either of the number is even perform the swap and increase both pointer, keep on increasing the pointer until we found 1 element as even
+
 if right is odd move right pointer by -1;
 
 Time Complexity: O(n);
