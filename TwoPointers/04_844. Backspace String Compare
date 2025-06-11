@@ -1,0 +1,36 @@
+URL: https://leetcode.com/problems/backspace-string-compare/description/
+
+844. Backspace String Compare
+
+Write a function that reverses a string. The input string is given as an array of characters s.
+
+You must do this by modifying the input array in-place with O(1) extra memory.
+
+ 
+Example 1:
+Input: s = ["h","e","l","l","o"]
+Output: ["o","l","l","e","h"]
+Example 2:
+Input: s = ["H","a","n","n","a","h"]
+Output: ["h","a","n","n","a","H"]
+
+ 
+Constraints:
+
+	1 <= s.length <= 105
+	s[i] is a printable ascii character.
+
+Approach 1:
+1. Push each non # character to stack and start poping element as soon you reach #.
+2. Compare 2 string 
+Time: O(n)
+Space: O(n);
+
+Approach 2:
+Consider 2 pointer each of string s and t.
+iterate until either of them is greater than or equal to 0.
+check for first pointer if greater than 0, determine if current character is '#', if yes increase skip counter by 1, if its a character and skip is greater than 0 
+skip that element by decreasing counter by 1, same for t sstring.
+check if character at current position for respective string are same if not return false.
+check if we have valid index for any of the string return false if not.
+decrement counter for both.
