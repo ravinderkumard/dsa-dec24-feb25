@@ -36,3 +36,9 @@ Start from both end of the array.
 as soon we consider height of left is smaller than height of right.
 Try to get max value from the left and update leftMax
 add difference between leftMax and height of left similarly for right element
+
+
+Approach 2:
+Try to create leftMax Array and Right Max array and update these array with value greater than from the left.
+now Iterate on both these array along with height array to determine the water than can be trapped.
+Math.max(leftMax,rightMax) - height at current point.
