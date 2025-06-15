@@ -42,5 +42,8 @@ if either of the number is even perform the swap and increase both pointer, keep
 
 if right is odd move right pointer by -1;
 
+Keep increasing the right pointer until we found an even number swap with the left pointer, and increase left poitner to next.
+
+
 Time Complexity: O(n);
 Space Comlexity: O(1);
