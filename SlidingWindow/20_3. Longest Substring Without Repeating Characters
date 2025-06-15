@@ -1,0 +1,46 @@
+URL: https://leetcode.com/problems/longest-substring-without-repeating-characters/description/
+
+3. Longest Substring Without Repeating Characters
+
+Given a string s, find the length of the longest substring without duplicate characters.
+
+ 
+Example 1:
+
+Input: s = "abcabcbb"
+Output: 3
+Explanation: The answer is "abc", with the length of 3.
+
+Example 2:
+
+Input: s = "bbbbb"
+Output: 1
+Explanation: The answer is "b", with the length of 1.
+
+Example 3:
+
+Input: s = "pwwkew"
+Output: 3
+Explanation: The answer is "wke", with the length of 3.
+Notice that the answer must be a substring, "pwke" is a subsequence and not a substring.
+
+ 
+Constraints:
+
+	0 <= s.length <= 5 * 104
+	s consists of English letters, digits, symbols and spaces.
+
+Approach 1:
+1. Use constant array to set the value of current index of character.
+2. If current index != -1 and is between left and right, update left by index+1.
+3. Get Max value of current length and existing.
+4. update index of character.
+
+Approach 2: 
+Using HashMap and sliding window.
+1. as soon we find character existing add it into hashMap,
+2. While count of character increase by 1, we have to start shrinking window.
+3. Return in min value.
+
+Approach 3:
+Optimize the approach to update the last index of character and determine the result.
