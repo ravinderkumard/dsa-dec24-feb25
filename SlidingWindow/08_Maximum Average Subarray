@@ -6,7 +6,7 @@ minimum possible length such that the sum of the subarray is greater than or equ
 
 
 Approach:
-This is Similar to Leet code 643.
+This is Similar to Leet code 209.
 Here we have to perform 2 pass.
 1. Determine the min length (use same as 643)
 2. Using min Length and sliding window technique find all such subarray.
