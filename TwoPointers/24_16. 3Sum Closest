@@ -1,0 +1,37 @@
+URL: https://leetcode.com/problems/3sum-closest/description/
+
+16. 3Sum Closest
+
+Given an integer array nums of length n and an integer target, find three integers in nums such that the sum is closest to target.
+
+Return the sum of the three integers.
+
+You may assume that each input would have exactly one solution.
+
+ 
+Example 1:
+
+Input: nums = [-1,2,1,-4], target = 1
+Output: 2
+Explanation: The sum that is closest to the target is 2. (-1 + 2 + 1 = 2).
+
+Example 2:
+
+Input: nums = [0,0,0], target = 1
+Output: 0
+Explanation: The sum that is closest to the target is 0. (0 + 0 + 0 = 0).
+
+ 
+Constraints:
+
+	3 <= nums.length <= 500
+	-1000 <= nums[i] <= 1000
+	-104 <= target <= 104
+
+Approach:
+1. Sort Array.
+2. Use 2 pointer approach to find the triplet.
+3. check if absolute minValue is greater than absolute value of target - sum of triplet.
+4. update min value.
+5. if sum is less than target move left pointer otherwise move right pointer.
+6. Return target - minValue
