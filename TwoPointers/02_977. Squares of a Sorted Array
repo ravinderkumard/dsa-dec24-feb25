@@ -37,6 +37,7 @@ Space Complexity: O(n);
 
 Approach 2:
 As the array is sorted.
+Create a result array and start putting elements at the end.
 Try using 2 pointers left and right and determine if absolute value of left is less than absolute value of right.
 If that is the case put the value at th end of array
 

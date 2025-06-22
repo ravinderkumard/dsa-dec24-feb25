@@ -72,11 +72,13 @@ Time complexity: O(n+m)
 Space Complexity: O(n);
 
 Approach 6:
-Review the constraint it mention that max vlaue of element is 1000 so we create array of 1001 that make space complexity as constant.
+Review the constraint it mention that max vlaue of element is 1000 so we create array of 1001 that 
+make space complexity as constant.
 Now start putting element from 1 array to temp array of size 1001 and set value as 1
-while iterating elemnt from 2 array if it already exist increase value in temp by 1 and also increase found counter.
-Now iterate over temp list which is constant of O(1001), check if element is equal to 2, set counter for element to 1
-and add element to result list.
+while iterating elemnt from 2 array if it already exist increase value in temp by 1 and also increase 
+found counter.
+Now iterate over temp list which is constant of O(1001), check if element is equal to 2, set counter for element 
+to 1 and add element to result list.
 
 
 Approach 5

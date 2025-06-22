@@ -1,0 +1,36 @@
+URL: https://leetcode.com/problems/shortest-subarray-with-sum-at-least-k/description/
+
+862. Shortest Subarray with Sum at Least K
+
+Given an array of integers heights representing the histogram's bar height where the width of each bar is 1, return the area of the largest rectangle in the histogram.
+
+ 
+Example 1:
+
+Input: heights = [2,1,5,6,2,3]
+Output: 10
+Explanation: The above is a histogram where width of each bar is 1.
+The largest rectangle is shown in the red area, which has an area = 10 units.
+
+Example 2:
+
+Input: heights = [2,4]
+Output: 4
+
+ 
+Constraints:
+
+	1 <= heights.length <= 105
+	0 <= heights[i] <= 104
+
+
+Approach:
+This is similar to sliding window problem, but with additional requirement of -ve integer.
+now if we have negative integer it is possible that later sum qualifies for the shortest array. So to support that
+we have to consider prefixSum.
+1. Define prefixSum array
+2. If difference between current prefixSum and prefix sum of first elment of queue is greater than target.
+Updpate min length
+3. Define a double ended queue that will store element start position and as we found prefix sum smaller than current 
+index remove the elemnt from end of queue.
+4. Keep adding elemnet to deque as we move forward

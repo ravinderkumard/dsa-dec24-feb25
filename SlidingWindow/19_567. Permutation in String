@@ -1,0 +1,31 @@
+URL: https://leetcode.com/problems/permutation-in-string/description/
+
+567. Permutation in String
+
+Given two strings s1 and s2, return true if s2 contains a permutation of s1, or false otherwise.
+
+In other words, return true if one of s1's permutations is the substring of s2.
+
+ 
+Example 1:
+
+Input: s1 = "ab", s2 = "eidbaooo"
+Output: true
+Explanation: s2 contains one permutation of s1 ("ba").
+
+Example 2:
+
+Input: s1 = "ab", s2 = "eidboaoo"
+Output: false
+
+ 
+Constraints:
+
+	1 <= s1.length, s2.length <= 104
+	s1 and s2 consist of lowercase English letters.
+
+Approach:
+Try to process between bucket of s1, its a fixed size sliding window.
+if size of s1 is greater than s2 return false as that is not possible to have permutation of s1 in s2.
+now try to add 1 element form right and remove elemetn from left and test char array if that is equal, return true 
+otherwise return false if no match found. 

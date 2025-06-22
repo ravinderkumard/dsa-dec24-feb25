@@ -1,0 +1,49 @@
+URL: https://leetcode.com/problems/partition-equal-subset-sum/description/
+
+416. Partition Equal Subset Sum
+
+Given the root of a binary search tree and an integer k, return true if there exist two elements in the BST such that their sum is equal to k, or false otherwise.
+
+ 
+Example 1:
+
+Input: root = [5,3,6,2,4,null,7], k = 9
+Output: true
+
+Example 2:
+
+Input: root = [5,3,6,2,4,null,7], k = 28
+Output: false
+
+ 
+Constraints:
+
+	The number of nodes in the tree is in the range [1, 104].
+	-104 <= Node.val <= 104
+	root is guaranteed to be a valid binary search tree.
+	-105 <= k <= 105
+
+Approach:
+Use 0/1 Knapsack approach 
+Find sum of all the element and divide that into 2. if total is odd return false as there doesnot exist any subset that are equal.
+Now this problem transform into 0/1 knapsack problem
+whre number of element are given and total/2 is the size of knapsack.
+Run recursion on this.
+Base case 
+  if knapsack is full return true;
+  if knapsack is less than 0, or no element left return false;
+
+Choices:
+  Take = reduce the count and subset sum.
+  Don't Date + reduce the count.
+
+return take||dont take.
+
+This will give TLE
+Now add memoization
+
+
+Covert Recursion + Memozation to Tabulation using 2D DP.
+
+As execution of current row depends on previous row so convert 2D dp to 1D dp.
+
