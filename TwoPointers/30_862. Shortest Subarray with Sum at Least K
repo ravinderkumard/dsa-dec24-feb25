@@ -2,26 +2,27 @@ URL: https://leetcode.com/problems/shortest-subarray-with-sum-at-least-k/descrip
 
 862. Shortest Subarray with Sum at Least K
 
-Given an array of integers heights representing the histogram's bar height where the width of each bar is 1, return the area of the largest rectangle in the histogram.
+Given an integer array nums and an integer k, return the length of the shortest non-empty subarray of nums with a sum of at least k. If there is no such subarray, return -1.
+
+A subarray is a contiguous part of an array.
 
  
 Example 1:
-
-Input: heights = [2,1,5,6,2,3]
-Output: 10
-Explanation: The above is a histogram where width of each bar is 1.
-The largest rectangle is shown in the red area, which has an area = 10 units.
-
+Input: nums = [1], k = 1
+Output: 1
 Example 2:
-
-Input: heights = [2,4]
-Output: 4
+Input: nums = [1,2], k = 4
+Output: -1
+Example 3:
+Input: nums = [2,-1,2], k = 3
+Output: 3
 
  
 Constraints:
 
-	1 <= heights.length <= 105
-	0 <= heights[i] <= 104
+	1 <= nums.length <= 105
+	-105 <= nums[i] <= 105
+	1 <= k <= 109
 
 
 Approach:
