@@ -1,0 +1,40 @@
+Floyd's Cycle-Finding Algorithm (also known as the Tortoise and Hare algorithm) is typically used to detect cycles in linked lists, but it can also be adapted to detect cycles in arrays, especially when the array represents a sequence of jumps or links (like a functional graph).
+
+🧠 Concept
+In an array, if each element represents the next index to jump to, you can use Floyd’s algorithm to detect if there’s a cycle in the sequence of jumps.
+
+✅ Conditions
+The array must be treated as a functional graph: each index points to another index.
+The values in the array must be valid indices (i.e., within bounds).
+🧩 Example
+Given an array:
+
+
+This represents the sequence:
+
+0 → 1
+1 → 3
+3 → 4
+4 → 2
+2 → 0
+This forms a cycle: 0 → 1 → 3 → 4 → 2 → 0
+
+
+Approach
+The slow pointer moves one step at a time.
+The fast pointer moves two steps at a time.
+When both pointers meet, a cycle is detected.
+
+Time Complexity: O(n)
+The algorithm has two phases:
+
+Cycle Detection: The slow and fast pointers move through the array. In the worst case, the fast pointer may traverse up to n elements before a cycle is detected or the end is reached.
+Cycle Length or Entry Point (if needed): If you want to find the start of the cycle or its length, it may take another O(n) steps.
+Therefore, the total time complexity is O(n).
+
+Space Complexity: O(1)
+The algorithm uses only a constant amount of extra space:
+
+Two pointers (slow and fast)
+A few variables for indexing
+No additional data structures (like hash sets or arrays) are used.
