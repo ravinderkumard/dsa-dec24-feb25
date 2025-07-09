@@ -1,0 +1,134 @@
+92. Reverse Linked List II
+Solved
+Medium
+Topics
+conpanies icon
+Companies
+Given the head of a singly linked list and two integers left and right where left <= right, reverse the nodes of the list from position left to position right, and return the reversed list.
+
+ 
+
+Example 1:
+
+
+Input: head = [1,2,3,4,5], left = 2, right = 4
+Output: [1,4,3,2,5]
+Example 2:
+
+Input: head = [5], left = 1, right = 1
+Output: [5]
+ 
+
+Constraints:
+
+The number of nodes in the list is n.
+1 <= n <= 500
+-500 <= Node.val <= 500
+1 <= left <= right <= n
+ 
+
+Follow up: Could you do it in one pass?
+
+
+Approach:
+1. Iterate for the first left-1 element and decrease counter for both left and right
+2. reverse elemnet between left and right, and set con = prev, tail = curr, and update curr and prev position.
+3. if con !=null con.next = prev otherwise head= prev;
+4. set tail.next = curr;
+return head;
+
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode reverseBetween(ListNode head, int left, int right) {
+        if(head==null){
+            return null;
+        }
+        ListNode curr = head, prev = null;
+        while(left>1){
+            prev = curr;
+            curr = curr.next;
+            left--;
+            right--;
+        }
+        ListNode con = prev, tail = curr;
+        ListNode third = null;
+        while(right>0){
+            third = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = third;
+            right--;
+        }
+        if(con!=null){
+            con.next = prev;
+        } else{
+            head = prev;
+        }
+        tail.next = curr;
+        return head;
+    }
+}
+
+
+Approach 2:
+1. Move current Pointer to left - 1 position and set start and currNode postion;
+2. Set tail = currNode.
+3. while current Pointer is between left and right, reverse the list.
+4. set next of strt = prev;
+5. set tail.next = currNode;
+6. return head if left>1 otherwise return prev;
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode reverseBetween(ListNode head, int left, int right) {
+        if(head==null){
+            return null;
+        }
+        ListNode start = head;
+        ListNode currNode = head;
+        int currPos = 1;
+        while(currPos<left){
+            currPos++;
+            start = currNode;
+            currNode = currNode.next;
+        }
+        ListNode tail = currNode;
+        ListNode prev = null;
+        ListNode next = null;
+        while(currPos>=left && currPos<=right){
+            next = currNode.next;
+            currNode.next = prev;
+            prev = currNode;
+            currPos++;
+            currNode = next;
+        }
+        start.next = prev;
+        tail.next = currNode;
+        if(left>1){
+            return head;
+        } else {
+            return prev;
+        }
+    }
+}
