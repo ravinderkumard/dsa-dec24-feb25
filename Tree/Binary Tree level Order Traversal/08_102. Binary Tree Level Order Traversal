@@ -27,6 +27,17 @@ Constraints:
 	-1000 <= Node.val <= 1000
 
 
+Approach 1: DFS.
+1. Perform PreOrder traversal of the tree and during traversal add element to the list of that level.
+2. First check if result array size is equal to level if Yes, insert an empty list at that level.
+3. During preorer traversal add elemnt to that level and make recursive call for the child of current node with level+1.
+
+Approach 2: BFS.
+1. Define an empty queue and add root to it.
+2. Iterate untill que is not empty.
+3. Detemine the current size of the queue and iterate untill size become 0, i.e. we have processed all the element for that level.
+4. Add current array to put all the currently parsed elements.
+5. if left and right child of current node is not empty ad them to the queue.
 
 class Solution {
     List<List<Integer>> result = new ArrayList<>();
