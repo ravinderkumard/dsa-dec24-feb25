@@ -39,6 +39,13 @@ Constraints:
 
 
 
+Approach:
+Recursive call method
+1. if root is null return false as for empty tree path is not possible till leaf.
+2. update targetSum.
+3. if childs of current node is null, return 
+4. recursive call for left and right child with updated target
+
 
 /**
  * Definition for a binary tree node.
