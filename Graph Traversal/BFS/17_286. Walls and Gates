@@ -31,7 +31,10 @@ Constraints:
 	rooms[i][j] is -1, 0, or 231 - 1.
 
 Solve using BFS.
-
+Approach:
+1. Mark all gates and put them in queue.
+2. Iterate over queue and pick up each element at a time.
+3. Check in for direction for the current gate if next block is empty will with value and add that to queue.
 
 class Solution {
     private final int EMPTY = Integer.MAX_VALUE;
