@@ -1,0 +1,144 @@
+116. Populating Next Right Pointers in Each Node
+
+You are given a perfect binary tree where all leaves are on the same level, and every parent has two children. The binary tree has the following definition:
+
+struct Node {
+  int val;
+  Node *left;
+  Node *right;
+  Node *next;
+}
+Populate each next pointer to point to its next right node. If there is no next right node, the next pointer should be set to NULL.
+
+Initially, all next pointers are set to NULL.
+
+ 
+
+Example 1:
+
+
+Input: root = [1,2,3,4,5,6,7]
+Output: [1,#,2,3,#,4,5,6,7,#]
+Explanation: Given the above perfect binary tree (Figure A), your function should populate each next pointer to point to its next right node, just like in Figure B. The serialized output is in level order as connected by the next pointers, with '#' signifying the end of each level.
+Example 2:
+
+Input: root = []
+Output: []
+ 
+
+Constraints:
+
+The number of nodes in the tree is in the range [0, 212 - 1].
+-1000 <= Node.val <= 1000
+ 
+
+Follow-up:
+
+You may only use constant extra space.
+The recursive approach is fine. You may assume implicit stack space does not count as extra space for this problem.
+
+
+Approach:
+BFS
+As the next element can be from the same level so intuition was it is level order traversal.
+
+Time Complexity: O(N)
+Space Complexity: O(N)
+
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public Node left;
+    public Node right;
+    public Node next;
+
+    public Node() {}
+    
+    public Node(int _val) {
+        val = _val;
+    }
+
+    public Node(int _val, Node _left, Node _right, Node _next) {
+        val = _val;
+        left = _left;
+        right = _right;
+        next = _next;
+    }
+};
+*/
+
+class Solution {
+    public Node connect(Node root) {
+        if(root==null){
+            return root;
+        }
+        Queue<Node> queue = new LinkedList<>();
+        queue.offer(root);
+        while(!queue.isEmpty()){
+            int size = queue.size();
+            for(int i=0;i<size;i++){
+                Node curr = queue.poll();
+                if(!queue.isEmpty() && i<size-1){
+                    curr.next = queue.peek();
+                }
+                
+                if(curr.left!=null){
+                    queue.offer(curr.left);
+                }
+                if(curr.right!=null){
+                    queue.offer(curr.right);
+                }
+            }
+        }
+        return root;
+    }
+}
+
+
+
+Approach:
+1. Start with root node. There are no next pointers that need to set up on the first level.
+2. Once we reach the final level, we are done
+3. Iterate the list start from head node and using next pointers establish the corresponding links for the next level
+4. Connection 1 = left.next = head.right and connection 2 = head.right.next = head.next.left
+5. Progress alogn the list
+6. move to next level
+
+class Solution {
+    public Node connect(Node root) {
+        if (root == null) {
+            return root;
+        }
+
+        // Start with the root node. There are no next pointers
+        // that need to be set up on the first level
+        Node leftmost = root;
+
+        // Once we reach the final level, we are done
+        while (leftmost.left != null) {
+            // Iterate the "linked list" starting from the head
+            // node and using the next pointers, establish the
+            // corresponding links for the next level
+            Node head = leftmost;
+
+            while (head != null) {
+                // CONNECTION 1
+                head.left.next = head.right;
+
+                // CONNECTION 2
+                if (head.next != null) {
+                    head.right.next = head.next.left;
+                }
+
+                // Progress along the list (nodes on the current level)
+                head = head.next;
+            }
+
+            // Move onto the next level
+            leftmost = leftmost.left;
+        }
+
+        return root;
+    }
+}
