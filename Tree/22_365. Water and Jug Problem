@@ -1,0 +1,200 @@
+
+
+365. Water and Jug Problem
+
+You are given two jugs with capacities x liters and y liters. You have an infinite water supply. Return whether the total amount of water in both jugs may reach target using the following operations:
+
+Fill either jug completely with water.
+Completely empty either jug.
+Pour water from one jug into another until the receiving jug is full, or the transferring jug is empty.
+ 
+
+Example 1:
+
+Input: x = 3, y = 5, target = 4
+
+Output: true
+
+Explanation:
+
+Follow these steps to reach a total of 4 liters:
+
+Fill the 5-liter jug (0, 5).
+Pour from the 5-liter jug into the 3-liter jug, leaving 2 liters (3, 2).
+Empty the 3-liter jug (0, 2).
+Transfer the 2 liters from the 5-liter jug to the 3-liter jug (2, 0).
+Fill the 5-liter jug again (2, 5).
+Pour from the 5-liter jug into the 3-liter jug until the 3-liter jug is full. This leaves 4 liters in the 5-liter jug (3, 4).
+Empty the 3-liter jug. Now, you have exactly 4 liters in the 5-liter jug (0, 4).
+Reference: The Die Hard example.
+
+Example 2:
+
+Input: x = 2, y = 6, target = 5
+
+Output: false
+
+Example 3:
+
+Input: x = 1, y = 2, target = 3
+
+Output: true
+
+Explanation: Fill both jugs. The total amount of water in both jugs is equal to 3 now.
+
+ 
+
+Constraints:
+
+1 <= x, y, target <= 103
+
+
+
+This code solves the "Water and Jug Problem" from LeetCode:
+
+Given two jugs with capacities x and y, determine if it is possible to measure exactly z liters using the jugs.
+
+✅ Approach: Breadth-First Search (BFS)
+We treat this problem as a state exploration problem, where each state is defined by the amount of water currently in jug x and jug y.
+
+🚩 State Definition
+java
+Copy
+Edit
+class State {
+    int x, y; // x: water in jug1, y: water in jug2
+}
+Each state represents a specific configuration of the two jugs.
+
+🧠 High-Level Idea:
+We perform BFS on all possible valid jug states, starting from (0, 0) (both jugs empty), and try all possible operations until we either reach a state where x + y == z (success), or exhaust all possibilities (failure).
+
+✅ Key Edge Cases First
+java
+Copy
+Edit
+if (x + y == z) return true;     // total capacity equals z
+if (x + y < z) return false;     // not enough water to measure z
+if (x % 2 == 0 && y % 2 == 0 && z % 2 != 0) return false; // even jugs can't measure odd z
+These are optimizations that catch some impossible scenarios early.
+
+🔁 BFS Implementation
+Step 1:
+Start from initial state (0, 0) and mark it unvisited.
+
+java
+Copy
+Edit
+State start = new State(0, 0);
+Queue<State> q = new LinkedList<>();
+q.add(start);
+Step 2:
+While the queue is not empty, pop the current state and try six possible operations:
+
+🔀 Six Operations Tried at Each State
+Let’s say the current state is (a, b):
+
+Operation	Resulting State	Description
+1. Pour x → y	(a − pour, b + pour)	Transfer as much from x to y as y can take
+2. Pour y → x	(a + pour, b − pour)	Transfer as much from y to x as x can take
+3. Empty x	(0, b)	Dump all water from jug x
+4. Empty y	(a, 0)	Dump all water from jug y
+5. Fill x	(x, b)	Fill jug x to its capacity
+6. Fill y	(a, y)	Fill jug y to its capacity
+
+These are implemented in code using simple Math.min logic.
+
+💡 Checking for Target z
+java
+Copy
+Edit
+if (curr.x + curr.y == z) return true;
+If at any point the total water in both jugs equals z, we succeed.
+
+🔒 Visited State Tracking
+To avoid infinite loops, we keep a HashSet of visited states:
+
+java
+Copy
+Edit
+visited.add(curr.x + "," + curr.y);
+Each state is encoded as a string "x,y".
+
+⏱️ Time and Space Complexity
+Time Complexity: O(x * y) – At most, we can have x+1 states for jug1 and y+1 for jug2.
+
+Space Complexity: O(x * y) – Due to visited set and queue holding those many states.
+
+📌 Example:
+For x = 3, y = 5, z = 4, this BFS will eventually reach (3,1) or (1,3) which gives 4 liters total, returning true.
+
+
+
+
+
+class Solution {
+    	class State{
+        int x,y;
+        State(int a, int b){
+            this.x=a;
+            this.y=b;
+        }
+    } 
+    public boolean canMeasureWater(int x, int y, int z) {
+        if(x+y==z) return true;
+        if(x+y<z) return false;
+        if(x%2==0 && y%2==0 && z%2!=0)//cannot measure odd capacity using even capacity jugs 
+            return false;
+        
+        HashSet<String> visited=new HashSet<>();//state visited hset of jugs
+        State start=new State(0,0);
+        Queue<State> q=new LinkedList<>();
+        q.add(start);
+        //run a bfs. don't add already visited states
+        while(q.size()>0){
+            int n=q.size();
+            State curr=q.poll();
+            if(curr.x+curr.y==z)
+                return true;
+            visited.add(curr.x+","+curr.y);
+            
+            int newY,newX;
+            //pour x->y ********************* option 1
+            newX=curr.x-Math.min(curr.x,y-curr.y);
+            newY=curr.y+Math.min(curr.x,y-curr.y);
+            if(!visited.contains(newX+","+newY) )
+                q.add(new State(newX,newY));
+            
+            //pour x<-y ********************* option 2
+            newX=curr.x+Math.min(curr.y,x-curr.x);
+            newY=curr.y-Math.min(curr.y,x-curr.x);
+            if(!visited.contains(newX+","+newY) )
+                q.add(new State(newX,newY));
+            
+            //expty x   ********************* option 3
+            newX=0;
+            newY=curr.y;//same
+            if(!visited.contains(newX+","+newY) )
+                q.add(new State(newX,newY));
+            
+            //empty y   ********************* option 4
+            newX=curr.x;//same
+            newY=0;
+            if(!visited.contains(newX+","+newY) )
+                q.add(new State(newX,newY));
+            
+            //fill x    ********************* option 5
+            newX=x;//max capacity
+            newY=curr.y;
+            if(!visited.contains(newX+","+newY) )
+                q.add(new State(newX,newY));
+            
+            //fill y    ********************* option 6
+            newX=curr.x;
+            newY=y;//max capacity
+            if(!visited.contains(newX+","+newY) )
+                q.add(new State(newX,newY));
+        }
+        return false;
+    }
+}
