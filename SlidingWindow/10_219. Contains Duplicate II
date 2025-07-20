@@ -32,3 +32,96 @@ Approach:
 1. Set values from right index to HashSet after checking for all the necessary conditions..
 2. Check if different is greater than k between left and right index, remove element from HashSet.
 3. Check if Hashset already contains element return true
+
+
+
+Approach: Sliding Window + HashSet
+🔍 Core Idea:
+We want to check for duplicates within a sliding window of size k as we iterate through the array.
+
+🔧 Code Walkthrough:
+java
+Copy
+Edit
+Set<Integer> set = new HashSet<>();
+int left = 0;
+Create a sliding window using a HashSet to store elements in the current window.
+
+left is the start index of the window, right is the current index in the loop.
+
+java
+Copy
+Edit
+for (int right = 0; right < nums.length; right++) {
+Iterate through each element with index right.
+
+java
+Copy
+Edit
+    if (right - left > k) {
+        set.remove(nums[left]);
+        left++;
+    }
+If the window size exceeds k, we slide it forward by:
+
+Removing nums[left] from the set
+
+Moving the left pointer ahead
+
+⚠️ Ensures that the window size is at most k
+
+java
+Copy
+Edit
+    if (set.contains(nums[right])) {
+        return true;
+    }
+If the current element already exists in the window, return true — we found a duplicate within k distance.
+
+java
+Copy
+Edit
+    set.add(nums[right]);
+Add the current element to the set (now part of the sliding window)
+
+🧠 Example:
+java
+Copy
+Edit
+nums = [1, 2, 3, 1], k = 3
+Step by step:
+
+right	left	nums[right]	set	contains duplicate?	window size	Action
+0	0	1	{1}	No	1	Add 1
+1	0	2	{1,2}	No	2	Add 2
+2	0	3	{1,2,3}	No	3	Add 3
+3	0	1	{1,2,3}	✅ Yes	4 → shrink	Return true
+
+⏱️ Time Complexity:
+O(n) – each element is added and removed from the HashSet at most once.
+
+🗃️ Space Complexity:
+O(min(n, k)) – at most k elements in the set at any time.
+
+✅ When to Use:
+Use this technique when you're asked to find duplicates within a certain distance (k) in a list. It’s an optimized way to avoid nested loops.
+
+Let me know if you want to see the brute force or optimized using HashMap as well.
+
+class Solution {
+    public boolean containsNearbyDuplicate(int[] nums, int k) {
+        Set<Integer> set = new HashSet<>();
+        int left = 0;
+        for(int right = 0;right<nums.length;right++){
+            if(right-left>k){
+                set.remove(nums[left]);
+                left++;
+            }
+            if(set.contains(nums[right])){
+                return true;
+            }
+            set.add(nums[right]);
+        }
+        return false;
+    }
+}
