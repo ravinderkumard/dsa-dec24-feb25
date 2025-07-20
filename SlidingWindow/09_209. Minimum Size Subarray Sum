@@ -36,3 +36,63 @@ Using sliding window try to find the length of subarray that is equal or greater
 Keep expanding the array until we reach the target.
 Update and Store the min length.
 Shrinkk the window once we reach element
+
+
+class Solution {
+    public int minSubArrayLen(int target, int[] nums) {
+        int minLen = Integer.MAX_VALUE;
+        int left = 0;
+        int sum = 0;
+        for(int right = 0;right<nums.length;right++){
+            sum = sum + nums[right];
+            while(sum>=target && left<=right){
+                minLen = Math.min(minLen,(right-left+1));
+                sum = sum-nums[left];
+                left++;
+            }
+        }
+        if(minLen==Integer.MAX_VALUE){
+            return 0;
+        }
+        return minLen;
+    }
+}
+
+
+When to Use:
+Use this O(n) sliding window version whenever you're dealing with positive integers only.
+Use the O(n log n) binary search method when you must handle edge cases, non-positive numbers, or want to explore optimal window size under constraints.
+
+class Solution {
+    public int minSubArrayLen(int target, int[] nums) {
+        int low = 1;
+        int high = nums.length;
+        int min = 0;
+        while(low<=high){
+            int mid = low+(high-low)/2;
+            if(windowFind(mid,nums,target)){
+                high = mid-1;
+                min = mid;
+            } else {
+                low = mid+1;
+            }
+        }
+        return min;
+    }
+    private boolean windowFind(int mid,int[] nums,int target){
+        int i = 0,j=0,max = Integer.MIN_VALUE,sum=0,n=nums.length;
+        while(j<n){
+            sum+=nums[j];
+            if(j-i+1==mid){
+                max = Math.max(sum,max);
+                sum-=nums[i];
+                i++;
+            }
+            j++;
+        }
+        if(max>=target){
+            return true;
+        }
+        return false;
+    }
+}
