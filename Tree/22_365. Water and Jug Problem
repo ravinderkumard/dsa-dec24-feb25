@@ -55,24 +55,21 @@ This code solves the "Water and Jug Problem" from LeetCode:
 Given two jugs with capacities x and y, determine if it is possible to measure exactly z liters using the jugs.
 
 ✅ Approach: Breadth-First Search (BFS)
-We treat this problem as a state exploration problem, where each state is defined by the amount of water currently in jug x and jug y.
+We treat this problem as a state exploration problem, where each state is defined by the amount of water currently 
+in jug x and jug y.
 
 🚩 State Definition
-java
-Copy
-Edit
+
 class State {
     int x, y; // x: water in jug1, y: water in jug2
 }
 Each state represents a specific configuration of the two jugs.
 
 🧠 High-Level Idea:
-We perform BFS on all possible valid jug states, starting from (0, 0) (both jugs empty), and try all possible operations until we either reach a state where x + y == z (success), or exhaust all possibilities (failure).
+We perform BFS on all possible valid jug states, starting from (0, 0) (both jugs empty), and try all possible operations 
+until we either reach a state where x + y == z (success), or exhaust all possibilities (failure).
 
 ✅ Key Edge Cases First
-java
-Copy
-Edit
 if (x + y == z) return true;     // total capacity equals z
 if (x + y < z) return false;     // not enough water to measure z
 if (x % 2 == 0 && y % 2 == 0 && z % 2 != 0) return false; // even jugs can't measure odd z
@@ -82,12 +79,10 @@ These are optimizations that catch some impossible scenarios early.
 Step 1:
 Start from initial state (0, 0) and mark it unvisited.
 
-java
-Copy
-Edit
 State start = new State(0, 0);
 Queue<State> q = new LinkedList<>();
 q.add(start);
+
 Step 2:
 While the queue is not empty, pop the current state and try six possible operations:
 
@@ -105,18 +100,13 @@ Operation	Resulting State	Description
 These are implemented in code using simple Math.min logic.
 
 💡 Checking for Target z
-java
-Copy
-Edit
+
 if (curr.x + curr.y == z) return true;
 If at any point the total water in both jugs equals z, we succeed.
 
 🔒 Visited State Tracking
 To avoid infinite loops, we keep a HashSet of visited states:
 
-java
-Copy
-Edit
 visited.add(curr.x + "," + curr.y);
 Each state is encoded as a string "x,y".
 
