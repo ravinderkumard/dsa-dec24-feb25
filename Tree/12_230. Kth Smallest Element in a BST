@@ -70,6 +70,30 @@ SC: O(n)
 
 
 class Solution {
+    public int kthSmallest(TreeNode root, int k) {
+        PriorityQueue<TreeNode> queue = new PriorityQueue<>((a,b)->b.val-a.val);
+        smallest(root,queue,k);
+        return queue.peek().val;
+    }
+    private void smallest(TreeNode root,PriorityQueue<TreeNode> queue,int k){
+        
+        if(root!=null){
+            queue.add(root);
+            while(queue.size()>k){
+                queue.poll();
+            }
+            smallest(root.left,queue,k);
+            smallest(root.right,queue,k);
+        }
+    }
+}
+
+
+
+
+
+
+class Solution {
     List<Integer> traversal = new ArrayList<>();
     public int kthSmallest(TreeNode root, int k) {
         traverse(root);
