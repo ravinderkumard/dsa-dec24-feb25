@@ -35,7 +35,7 @@ Constraints:
 *************************************************************************************
 
 	NOTES:
-	1. This is an exmaple of Binary Tree, So like 236 where we have to search node in BST we donot have a set pattern of element
+	1. This is an exmaple of Binary Tree, So like 235 where we have to search node in BST we donot have a set pattern of element
 		on left side or right side to node.
 	2. So, idea is to iterate both left and right side of the tree and check both p and q or both left and right of the node if they are not node itself.
 	3. Check if the p or q itself is at root => retrun root if so.
