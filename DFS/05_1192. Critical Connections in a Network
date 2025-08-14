@@ -1,0 +1,180 @@
+1192. Critical Connections in a Network
+
+There are n servers numbered from 0 to n - 1 connected by undirected server-to-server connections forming a network where connections[i] = [ai, bi] represents a connection between servers ai and bi. Any server can reach other servers directly or indirectly through the network.
+
+A critical connection is a connection that, if removed, will make some servers unable to reach some other server.
+
+Return all critical connections in the network in any order.
+
+ 
+
+Example 1:
+
+
+Input: n = 4, connections = [[0,1],[1,2],[2,0],[1,3]]
+Output: [[1,3]]
+Explanation: [[3,1]] is also accepted.
+Example 2:
+
+Input: n = 2, connections = [[0,1]]
+Output: [[0,1]]
+ 
+
+Constraints:
+
+2 <= n <= 105
+n - 1 <= connections.length <= 105
+0 <= ai, bi <= n - 1
+ai != bi
+There are no repeated connections.
+
+https://www.youtube.com/watch?v=RYaakWv5m6o
+
+
+
+class Solution {
+    
+    private Map<Integer, List<Integer>> graph;
+    private Map<Integer, Integer> rank;
+    private Map<Pair<Integer, Integer>, Boolean> connDict;
+    
+    public List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+       
+        this.formGraph(n, connections);
+        this.dfs(0, 0);
+        
+        List<List<Integer>> result = new ArrayList<List<Integer>>();
+        for (Pair<Integer, Integer> criticalConnection : this.connDict.keySet()) {
+            result.add(new ArrayList<Integer>(Arrays.asList(criticalConnection.getKey(), criticalConnection.getValue())));
+        }
+        
+        return result;
+    }
+    
+    private int dfs(int node, int discoveryRank) {
+        
+        // That means this node is already visited. We simply return the rank.
+        if (this.rank.get(node) != null) {
+            return this.rank.get(node);
+        }
+        
+        // Update the rank of this node.
+        this.rank.put(node, discoveryRank);
+        
+        // This is the max we have seen till now. So we start with this instead of INT_MAX or something.
+        int minRank = discoveryRank + 1;
+        
+        for (Integer neighbor : this.graph.get(node)) {
+            
+            // Skip the parent.
+            Integer neighRank = this.rank.get(neighbor);
+            if (neighRank != null && neighRank == discoveryRank - 1) {
+                continue;
+            }
+            
+            // Recurse on the neighbor.
+            int recursiveRank = this.dfs(neighbor, discoveryRank + 1);
+            
+            // Step 1, check if this edge needs to be discarded.
+            if (recursiveRank <= discoveryRank) {
+                int sortedU = Math.min(node, neighbor), sortedV = Math.max(node, neighbor);
+                this.connDict.remove(new Pair<Integer, Integer>(sortedU, sortedV));
+            }
+            
+            // Step 2, update the minRank if needed.
+            minRank = Math.min(minRank, recursiveRank);
+        }
+        
+        return minRank;
+    }
+    
+    private void formGraph(int n, List<List<Integer>> connections) {
+        
+        this.graph = new HashMap<Integer, List<Integer>>();
+        this.rank = new HashMap<Integer, Integer>();
+        this.connDict = new HashMap<Pair<Integer, Integer>, Boolean>();
+        
+        // Default rank for unvisited nodes is "null"
+        for (int i = 0; i < n; i++) {
+            this.graph.put(i, new ArrayList<Integer>());
+            this.rank.put(i, null);
+        }
+        
+        for (List<Integer> edge : connections) {
+            
+            // Bidirectional edges
+            int u = edge.get(0), v = edge.get(1);
+            this.graph.get(u).add(v);
+            this.graph.get(v).add(u);
+            
+            int sortedU = Math.min(u, v), sortedV = Math.max(u, v);
+            connDict.put(new Pair<Integer, Integer>(sortedU, sortedV), true);
+        }
+    }
+}
+
+
+
+
+import java.util.*;
+
+class Solution {
+    public List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+        List<Integer>[] g = new ArrayList[n];
+        for (int i = 0; i < n; i++) g[i] = new ArrayList<>();
+        for (List<Integer> e : connections) {
+            int u = e.get(0), v = e.get(1);
+            g[u].add(v);
+            g[v].add(u);
+        }
+
+        int[] disc = new int[n];
+        int[] low  = new int[n];
+        int[] parent = new int[n];
+        int[] it = new int[n];                 // iterator index per node
+        Arrays.fill(disc, -1);
+        Arrays.fill(parent, -1);
+
+        List<List<Integer>> bridges = new ArrayList<>();
+        int time = 0;
+
+        Deque<Integer> stack = new ArrayDeque<>();
+
+        for (int start = 0; start < n; start++) {
+            if (disc[start] != -1) continue;
+
+            // start DFS at 'start'
+            stack.push(start);
+            disc[start] = low[start] = time++;
+            it[start] = 0;
+
+            while (!stack.isEmpty()) {
+                int u = stack.peek();
+
+                if (it[u] < g[u].size()) {
+                    int v = g[u].get(it[u]++);
+                    if (v == parent[u]) continue;
+
+                    if (disc[v] == -1) {
+                        parent[v] = u;
+                        stack.push(v);
+                        disc[v] = low[v] = time++;
+                        it[v] = 0;
+                    } else {
+                        // back edge
+                        low[u] = Math.min(low[u], disc[v]);
+                    }
+                } else {
+                    // done exploring u; update parent and check bridge
+                    stack.pop();
+                    int p = parent[u];
+                    if (p != -1) {
+                        if (low[u] > disc[p]) bridges.add(Arrays.asList(p, u));
+                        low[p] = Math.min(low[p], low[u]);
+                    }
+                }
+            }
+        }
+        return bridges;
+    }
+}
