@@ -48,6 +48,331 @@ Each key in the grid has a matching lock.
 
 
 
+APPROACH
+
+Awesome, let's chat about your idea! 😊 How do you plan to collect all the keys and handle the locks in the grid? Are you thinking of using BFS, DFS, or something else? Share your thoughts!
+
+clipboard
+like
+dislike
+BFS with state
+
+mentor
+dot
+Leeco
+
+Great choice! BFS with state tracking is ideal here since we need the shortest path and must remember which keys we’ve collected. For each position, we track both coordinates and the set of keys (using a bitmask for efficiency).
+
+Quick check: What do you think should be included in the "state" for each BFS node?
+
+clipboard
+like
+dislike
+Row, column, and keys collected
+
+mentor
+dot
+Leeco
+
+Exactly! Each BFS node should track (row, column, keys collected). This ensures we don’t revisit the same spot with the same keys, avoiding cycles.
+
+Now, how do you plan to represent the set of collected keys efficiently in your state?
+
+clipboard
+like
+dislike
+Bitmask (integer)
+
+mentor
+dot
+Leeco
+
+Great choice! Bitmasking is super efficient here, especially since we have at most 6 keys (so 6 bits). It keeps our state compact and checks for collected keys fast.
+
+Quick quiz: If you’ve collected keys 'a' and 'c', what would the bitmask look like in binary?
+
+clipboard
+like
+dislike
+101
+
+mentor
+dot
+Leeco
+
+Spot on! 👍 If you’ve collected keys 'a' and 'c', the bitmask is 101 (in binary), which equals 5 in decimal. This lets you quickly check if you have a key by bitwise operations.
+
+Next, when do you update your bitmask during BFS traversal?
+
+clipboard
+like
+dislike
+When landing on a key cell
+
+mentor
+dot
+Leeco
+
+Exactly! You update your bitmask only when you land on a cell containing a key. This way, your state always reflects the correct set of collected keys.
+
+Next up: How do you ensure you don’t revisit the same cell with the same set of keys, causing unnecessary cycles in your BFS?
+
+clipboard
+like
+dislike
+Use a 3D visited array
+
+mentor
+dot
+Leeco
+
+Exactly! A 3D visited array like visited[row][col][bitmask] ensures you only revisit a cell if you have a different set of keys, preventing unnecessary cycles and redundant work.
+
+Ready for the next step? What should you do when you encounter a lock (like 'A') during BFS?
+
+clipboard
+like
+dislike
+Check if the corresponding key is collected
+
+mentor
+dot
+Leeco
+
+Absolutely right! 😎 When you hit a lock (like 'A'), you should only proceed if your bitmask shows you’ve collected the matching key ('a'). Otherwise, you skip that path.
+
+Quiz time: What should you do when you reach a cell with a wall ('#')?
+
+clipboard
+like
+dislike
+Skip and do not add to queue
+
+mentor
+dot
+Leeco
+
+Exactly! If you hit a wall ('#'), just skip that cell—don’t add it to the queue, and move on. This keeps your BFS clean and efficient.
+
+Quick check: What condition tells you that you’ve collected all the keys and can return the answer?
+
+clipboard
+like
+dislike
+Bitmask equals all-keys bitmask
+
+mentor
+dot
+Leeco
+
+Exactly! 🎯 Once your bitmask equals the all-keys bitmask (like 
+111...
+111... for all keys), you’ve collected everything and can return the number of steps.
+
+Ready for a quick challenge? If there are 4 keys in the grid, what’s the decimal value of the all-keys bitmask?
+
+clipboard
+like
+dislike
+15
+
+mentor
+dot
+Leeco
+
+Correct! With 4 keys, the all-keys bitmask is 1111 in binary, which is 15 in decimal. That means once your bitmask hits 15, you’ve got all the keys and can finish.
+
+Want to discuss how to set up your BFS queue and visited structure, or ready to try coding this out?
+
+clipboard
+like
+dislike
+Discuss BFS setup
+
+mentor
+dot
+Leeco
+
+Alright, let’s break down the BFS setup for this problem:
+
+Each queue entry = (row, col, keys bitmask, steps so far).
+Use a 3D boolean array: visited[row][col][keys_bitmask].
+Start from '@', keys bitmask = 0, steps = 0.
+For each move: check boundaries, wall, lock (need key), or key (update bitmask).
+Which part would you like to dive deeper into?
+
+clipboard
+like
+dislike
+Queue initialization
+
+mentor
+dot
+Leeco
+
+Nice! For queue initialization, here’s what you do:
+
+Find the starting cell '@' in the grid.
+Set keys bitmask = 0 (no keys yet).
+Steps = 0.
+Add (start_row, start_col, 0, 0) to the queue.
+Mark visited[start_row][start_col][0] = true.
+Quiz: What’s the next thing you should do after queue initialization?
+
+clipboard
+like
+dislike
+Start BFS loop
+
+mentor
+dot
+Leeco
+
+Perfect! After initializing the queue, you start the BFS loop. In each iteration, pop from the queue, check possible moves, update the bitmask if you find a key, and add valid states back to the queue.
+
+Quick check: When adding a new state to the queue, what should you do first?
+
+clipboard
+like
+dislike
+Check if visited
+
+mentor
+dot
+Leeco
+
+Exactly! Always check if the new state (row, col, keys bitmask) has been visited before adding it to the queue. This avoids repeated work and cycles.
+
+Next up: What should you do if the new state hasn’t been visited yet?
+
+clipboard
+like
+dislike
+Mark as visited and add to queue
+
+mentor
+dot
+Leeco
+
+Spot on! 👍 If the state hasn’t been visited, mark it as visited and add it to the queue. This ensures you don’t revisit the same scenario and keeps your BFS efficient.
+
+Quick quiz: Why is the bitmask part of the visited check, not just row and column?
+
+clipboard
+like
+dislike
+Different keys mean different states
+
+mentor
+dot
+Leeco
+
+Exactly! Each unique set of keys (bitmask) can lead to different paths, even if you’re at the same cell. So, (row, col, bitmask) is a unique state.
+
+Want to see a quick example of how the bitmask changes as you collect keys, or ready to code?
+
+clipboard
+like
+dislike
+Need a recap
+
+mentor
+dot
+Leeco
+
+Sure thing! Here’s a quick recap for the BFS approach:
+
+Start at '@' with no keys (bitmask = 0).
+Use a queue: each entry is (row, col, bitmask, steps).
+Use a visited array: visited[row][col][bitmask].
+At each step, move in 4 directions, collect keys, skip walls/locks if you don’t have the key.
+Stop when bitmask equals all-keys bitmask.
+Want to see a real example, or ready to try coding?
+
+
+
+
+
+class Solution {
+    class State {
+        int keys, i, j;
+        State(int keys, int i, int j) {
+            this.keys = keys;
+            this.i = i;
+            this.j = j;
+        }
+    }
+
+    public int shortestPathAllKeys(String[] grid) {
+        int x = -1, y = -1, m = grid.length, n = grid[0].length(), totalKeys = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                char c = grid[i].charAt(j);
+                if (c == '@') {
+                    x = i;
+                    y = j;
+                }
+                if (c >= 'a' && c <= 'f') {
+                    totalKeys++;
+                }
+            }
+        }
+
+        State start = new State(0, x, y);
+        Queue<State> q = new LinkedList<>();
+        Set<String> visited = new HashSet<>();
+        visited.add(0 + " " + x + " " + y);
+        q.offer(start);
+
+        int[][] dirs = new int[][]{{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+        int step = 0;
+
+        while (!q.isEmpty()) {
+            int size = q.size();
+            while (size-- > 0) {
+                State cur = q.poll();
+                if (cur.keys == (1 << totalKeys) - 1) {
+                    return step;
+                }
+
+                for (int[] dir : dirs) {
+                    int i = cur.i + dir[0];
+                    int j = cur.j + dir[1];
+                    int keys = cur.keys;
+
+                    if (i >= 0 && i < m && j >= 0 && j < n) {
+                        char c = grid[i].charAt(j);
+                        if (c == '#') continue;
+
+                        if (c >= 'a' && c <= 'f') {
+                            keys |= 1 << (c - 'a');
+                        }
+
+                        if (c >= 'A' && c <= 'F' && ((keys >> (c - 'A')) & 1) == 0) {
+                            continue;
+                        }
+
+                        String key = keys + " " + i + " " + j;
+                        if (!visited.contains(key)) {
+                            visited.add(key);
+                            q.offer(new State(keys, i, j));
+                        }
+                    }
+                }
+            }
+            step++;
+        }
+
+        return -1;
+    }
+}
+
+
+
+
+
+
+
 
 
 import java.awt.Point;
