@@ -1,0 +1,497 @@
+
+295. Find Median from Data Stream
+Solved
+
+avatar
+Discuss Approach
+Hard
+Topics
+conpanies icon
+Companies
+The median is the middle value in an ordered integer list. If the size of the list is even, there is no middle value, and the median is the mean of the two middle values.
+
+For example, for arr = [2,3,4], the median is 3.
+For example, for arr = [2,3], the median is (2 + 3) / 2 = 2.5.
+Implement the MedianFinder class:
+
+MedianFinder() initializes the MedianFinder object.
+void addNum(int num) adds the integer num from the data stream to the data structure.
+double findMedian() returns the median of all elements so far. Answers within 10-5 of the actual answer will be accepted.
+ 
+
+Example 1:
+
+Input
+["MedianFinder", "addNum", "addNum", "findMedian", "addNum", "findMedian"]
+[[], [1], [2], [], [3], []]
+Output
+[null, null, null, 1.5, null, 2.0]
+
+Explanation
+MedianFinder medianFinder = new MedianFinder();
+medianFinder.addNum(1);    // arr = [1]
+medianFinder.addNum(2);    // arr = [1, 2]
+medianFinder.findMedian(); // return 1.5 (i.e., (1 + 2) / 2)
+medianFinder.addNum(3);    // arr[1, 2, 3]
+medianFinder.findMedian(); // return 2.0
+ 
+
+Constraints:
+
+-105 <= num <= 105
+There will be at least one element in the data structure before calling findMedian.
+At most 5 * 104 calls will be made to addNum and findMedian.
+ 
+
+Follow up:
+
+If all integer numbers from the stream are in the range [0, 100], how would you optimize your solution?
+If 99% of all integer numbers from the stream are in the range [0, 100], how would you optimize your solution?
+
+
+
+
+
+Alright, Ravinder! Let's dive into the interview based on the problem "Find Median from Data Stream."
+
+We'll start with your understanding of the problem.
+
+First question: Can you explain the problem statement and what the MedianFinder class is supposed to accomplish? Be sure to include edge cases and constraints in your explanation.
+
+clipboard
+like
+dislike
+We have to find Median of Data stream, for that we can use 2 heap(min-heap and max-heap). each to store number in ascending and desending order. During find median we will check size of the queue if they are same we will return median of 2 number and if they are not same we will return median 
+
+mentor
+dot
+Leeco
+
+Got it! You're suggesting using two heaps—min-heap and max-heap—to maintain the order of numbers and efficiently find the median. Here's the breakdown of your approach:
+
+Min-Heap: Stores the larger half of the numbers in ascending order.
+Max-Heap: Stores the smaller half of the numbers in descending order.
+For finding the median:
+
+If the heaps have equal size, the median is the average of the top elements from both heaps.
+If the sizes differ, the median comes from the heap with more elements.
+This approach is solid and commonly used for this problem. Now, let me push further:
+
+How do you ensure the heaps stay balanced after adding a number? What happens when a number disrupts the balance?
+
+clipboard
+like
+dislike
+we will remove the top element and try to balance the heaps
+
+mentor
+dot
+Leeco
+
+Achha, makes sense. You're saying that when the heaps become unbalanced after adding a number, you'll remove the top element from the larger heap and transfer it to the smaller heap to restore balance. That’s a solid approach. 👍
+
+Now, let me test your understanding a bit further:
+
+What happens if you add a number that is smaller than the maximum of the max-heap or larger than the minimum of the min-heap? How does your code ensure the heaps remain properly ordered in such cases?
+
+clipboard
+like
+dislike
+both these heap will have a difference of 1 element lets say we have 5 element each in the 2 heaps, now if a number larger than min heap comes in it should sit on max heap first and then rebalance will happen that will adjust the element 
+
+mentor
+dot
+Leeco
+
+Ohh, I see what you're saying! You're explaining that if a new number larger than the min-heap's top arrives, it should first go into the max-heap and then the rebalancing process will ensure the heaps maintain their size difference of at most one. Makes sense. 👍
+
+Here's a follow-up question for you:
+How do you decide whether the new number should go into the max-heap or the min-heap initially? Is it based purely on comparisons with the heaps' top elements, or do you have a specific rule for insertion?
+
+clipboard
+like
+dislike
+by looking as the number value with current top element of the array.
+
+mentor
+dot
+Leeco
+
+Achha, so you're saying that you decide where to insert the new number by comparing it with the top elements of the heaps—specifically, the max-heap top and min-heap top. Got it. 👍
+
+This comparison-based insertion approach works well. Now, let me challenge you a bit:
+
+What happens if the incoming number is equal to the top of either heap? For example, if num == maxHeap.peek() or num == minHeap.peek(), does your logic handle this scenario correctly? How are duplicate numbers managed in your heaps?
+
+clipboard
+like
+dislike
+that will go to either of the heap and then heapify method will adjust and then if size of 2 heaps are not balance it will rebalance
+
+mentor
+dot
+Leeco
+
+Achha, I see what you're saying. So, you're relying on the heapify method to maintain the heap properties after insertion, and then you'll rebalance the heaps if their sizes are not balanced. That works. 👍
+
+Let me press you a bit further:
+When rebalancing, how do you decide which element to transfer from one heap to the other? And why is this step crucial for ensuring the correct computation of the median?
+
+clipboard
+like
+dislike
+To transfer the element we have to check the size of the 2 heap if they are greater than 1 we must keep pulling elemnt for top of that heap to another heap. This step is crucial as it will balance the size and keep the moving the median as the element comes in.
+
+mentor
+dot
+Leeco
+
+Ohh, I see what you're saying. You're ensuring that the size difference between the two heaps never exceeds 1 by transferring elements from the top of the larger heap to the smaller heap. This step is indeed crucial because it maintains the balance required to accurately compute the median without re-sorting the entire data stream. Makes sense. 👍
+
+Now, let's move to the next step.
+
+Can you explain how your findMedian method works with the two heaps? Specifically, how does it handle the cases when the heaps are of equal size versus when one heap has more elements?
+
+clipboard
+like
+dislike
+when the heap sizes are not equal and they have a difference of 1, we must return top element of bigger heap as that element will define median. secondly if sizes of the 2 heaps are equal we will pick top element from both the heap and divide them by 2 to determine the median
+
+mentor
+dot
+Leeco
+
+Got it, Ravinder! So, when the heap sizes are unequal with a size difference of 1, the median is the top element of the larger heap. And when the sizes are equal, you calculate the median as the average of the top elements of both heaps. That’s spot on. 👍
+
+Now, let’s shift gears a little bit:
+
+What will you do if all integers in the data stream fall within a specific range, like [0, 100]? How would you optimize your solution in such a case?
+
+clipboard
+like
+dislike
+not sure can you help 
+
+mentor
+dot
+Leeco
+
+Sure, Ravinder! Let's break this down step by step. We're working on the "Find Median from Data Stream" problem, and the question specifically asks:
+
+How would you optimize your solution if all integers from the stream are in the range [0, 100]?
+
+Here's the first step:
+Instead of using heaps, you could use a fixed-size array (or frequency array) to store the count of each number in the range [0, 100]. This would help keep track of the occurrences of each number efficiently.
+
+Would you like me to explain how finding the median works with this approach? Or do you have a different idea in mind? 😊
+
+clipboard
+like
+dislike
+yes plz
+
+mentor
+dot
+Leeco
+
+Alright, let’s optimize the solution for the scenario where all integers from the stream are in the range [0, 100]. Here's the first step:
+
+Instead of using heaps, you can use a frequency array of size 101 to count occurrences of each number. This way, you can efficiently track the numbers in the stream.
+
+Step 1: Frequency Array
+Create an array freq[101] where freq[i] stores the count of the number i in the data stream.
+As numbers are added via addNum, simply increment the corresponding index in the array.
+Would you like me to explain how this helps in finding the median? 😊
+
+clipboard
+like
+dislike
+yes
+
+mentor
+dot
+Leeco
+
+Alright, let's continue! 😎
+
+Step 2: Finding the Median with Frequency Array
+Now that you’re maintaining a frequency array to track occurrences of numbers in the range [0, 100], here’s how you’d find the median:
+
+Calculate Total Count:
+Sum up all the values in the frequency array to get the total number of elements in the stream.
+
+Identify Median Position:
+
+If the total count is odd, the median is the middle element (position = totalCount / 2 + 1).
+If the total count is even, the median is the average of the two middle elements (positions = totalCount / 2 and totalCount / 2 + 1).
+Traverse the Frequency Array:
+
+Iterate through the frequency array while keeping a running total of elements encountered.
+Stop when the running total reaches the median position(s).
+This way, you avoid using heaps altogether and instead leverage the fixed range of numbers for quick computation.
+
+Does this approach make sense? Would you like to dive into the code implementation for it? 😊
+
+clipboard
+like
+dislike
+can you help me code this
+
+mentor
+dot
+Leeco
+
+Alright, Ravinder! I see you're asking for help coding the optimized solution using a frequency array for the scenario where all integers are in the range [0, 100]. Let's go step by step to make it clear and manageable. 🛠️
+
+Step 1: Define the Class
+We’ll start by defining the MedianFinder class and initializing the frequency array to store counts of numbers in the range [0, 100].
+
+Would you like me to proceed with this first step? 😊
+
+clipboard
+like
+dislike
+yes
+
+mentor
+dot
+Leeco
+
+Great! Let's start with Step 1: Define the Class and Initialize the Frequency Array for the optimized solution where numbers are in the range [0, 100].
+
+Here’s how the class would look:
+
+1class MedianFinder {
+2    private int[] freq; // Frequency array to count occurrences of numbers
+3    private int totalCount; // Total count of numbers added so far
+4    
+5    public MedianFinder() {
+6        freq = new int[101]; // Array size for range [0, 100]
+7        totalCount = 0; // Initialize total count to 0
+8    }
+9    
+10    public void addNum(int num) {
+11        freq[num]++; // Increment the count of the number
+12        totalCount++; // Increment the total count of numbers
+13    }
+14}
+This sets up the foundation with the frequency array and a variable to track the total count of numbers added.
+
+Do you want me to proceed to Step 2: Implement the findMedian method? 😊
+
+clipboard
+like
+dislike
+yes done
+
+mentor
+dot
+Leeco
+
+Alright, Ravinder, let’s move to Step 2: Implement the findMedian method. This is where the magic happens—calculating the median using the frequency array. Here's how it works:
+
+Step 2: Traverse the Frequency Array to Find Median
+We need to:
+
+Handle Odd Total Count: Find the middle element (position = totalCount / 2 + 1).
+Handle Even Total Count: Find the average of the two middle elements (positions = totalCount / 2 and totalCount / 2 + 1).
+Use a Running Total: Traverse through the frequency array, accumulating counts until you reach the required position(s).
+Here’s the code for findMedian:
+
+1public double findMedian() {
+2    int medianPos1 = (totalCount + 1) / 2; // Position for odd or first median for even
+3    int medianPos2 = totalCount / 2 + 1;  // Second median position for even case
+4    int runningTotal = 0; // Tracks cumulative count while traversing freq array
+5    int num1 = 0, num2 = 0; // To store the numbers at the median positions
+6
+7    for (int i = 0; i < freq.length; i++) {
+8        runningTotal += freq[i]; // Accumulate count
+9        if (runningTotal >= medianPos1 && num1 == 0) {
+10            num1 = i; // First median value found
+11        }
+12        if (runningTotal >= medianPos2) {
+13            num2 = i; // Second median value found (if needed)
+14            break;
+15        }
+16    }
+17
+18    // Return median: average for even count, single value for odd count
+19    return totalCount % 2 == 0 ? (num1 + num2) / 2.0 : num1;
+20}
+This method efficiently calculates the median without sorting or using heaps. Now the class is complete! 🎉
+
+Would you like me to explain any part of this code further? Or test it with an example input? 😊
+
+clipboard
+like
+dislike
+this code will not work for negative numbers
+
+SelectedText: [[],[-1],[],[-2],[],[-3],[],[-4],[],[-5],[]]
+
+mentor
+dot
+Leeco
+
+Correct, Ravinder! Your code will fail for negative numbers because the frequency array you created only works for positive numbers. Specifically, the array index directly corresponds to the number value, and negative numbers cannot be used as array indices (which leads to the ArrayIndexOutOfBoundsException error).
+
+Would you like me to guide you on how to modify your code to handle negative numbers efficiently? 😊
+
+clipboard
+like
+dislike
+yes
+
+mentor
+dot
+Leeco
+
+Alright, Ravinder, let’s address the issue with your code step by step. 😊
+
+Problem with Your Code:
+Your current implementation uses an array index directly tied to the number value. This works fine for positive numbers but fails for negative numbers because:
+
+Negative numbers cannot be used as array indices.
+For example, freq[-1] throws an ArrayIndexOutOfBoundsException.
+
+Your array's size (10000001) is unnecessarily large and still doesn't handle the range [-105, 105] specified in the constraints.
+
+Step 1: Normalize the Range
+To handle negative numbers, you need to shift the range of numbers so that all numbers map to valid positive indices. For example:
+
+Shift all numbers by adding 105 (since the range is [-105, 105]).
+This way, -105 maps to index 0, 0 maps to index 105, and 105 maps to index 210.
+Would you like me to show you how to update your MedianFinder class to implement this normalization? 😊
+
+clipboard
+like
+dislike
+yes
+
+mentor
+dot
+Leeco
+
+Alright, Ravinder! Let’s fix your code to handle negative numbers by normalizing the range. Here’s the updated step:
+
+Step 1: Normalize the Range
+We need to shift the range of numbers from [-105, 105] to [0, 210] to make them valid indices for the frequency array. This is achieved by adding 105 to each number.
+
+Updated Code for Normalization
+
+
+
+
+
+Here is your interview feedback summary based on your 3rd mock session focused on the "Find Median from Data Stream" problem, tailored for backend developer interviews at MAANG and product-based companies:
+
+🧠 Detailed Feedback:
+✅ What You Did Well:
+You quickly identified the optimal data structure (two heaps) for streaming median calculation and clearly articulated the balancing and median retrieval logic . You also demonstrated adaptability by engaging with the optimization follow-up (frequency array for bounded range) and recognized the limitations of the array-based approach with negative numbers.
+
+⚠️ Areas for Improvement:
+At times, your explanations lacked precision—especially in the details of heap balancing and the insertion logic . When asked about edge cases (duplicates, negative numbers, and rebalancing), your responses were brief and could be strengthened by more explicit reasoning. In high-bar interviews, deeper exploration of edge cases, time/space complexity, and code robustness will help you stand out.
+
+⏱️ Time Management:
+You completed the interview in about 56 minutes, which is well-paced and allowed for thorough discussion . However, there were moments where you could have used the extra time to elaborate on alternative solutions or clarify subtle points.
+
+🔍 Feedback Overview:
+Category	Strengths	Improvements Needed	Suggested Resources/Next Steps
+Technical Skills	Identified correct data structures (heaps, frequency array); handled optimization for bounded range; recognized normalization for negatives	More explicit explanation of heap balancing and edge cases; discuss time/space complexity in detail	Review advanced heap operations; practice explaining design trade-offs
+Behavioral Answers	Engaged positively with follow-ups; open to feedback; asked for help when unsure	Could elaborate more on reasoning, especially under probing	Practice STAR format for technical deep dives
+Analytical Thinking	Applied logic to optimization scenarios; quickly spotted array limitations for negatives	Sometimes missed deeper nuance in insertion/rebalancing logic	Simulate step-by-step heap operations and edge case walkthroughs
+Time Management	Used time efficiently; covered all major aspects	Could use spare minutes to deepen explanations or discuss alternatives	Deliberately expand answers in future mocks, especially on follow-ups
+📘 Next Steps:
+
+Practice walking through your heap-based and frequency-array code out loud, emphasizing how you handle duplicates, edge cases, and performance trade-offs.
+For backend interviews at MAANG/product-based companies, be ready to defend your design and implementation choices with clear, in-depth reasoning—especially for follow-up optimizations and edge cases.
+Try mock interviews where you challenge yourself to explain not just the "how," but the "why" behind each design decision, and always relate your solution back to real-world backend scenarios.
+You’re making excellent progress for your 3rd interview! Keep refining your depth of explanation, and always be ready to discuss alternatives and edge cases . You’re on track to crack those interviews—keep up the momentum! 🚀
+
+
+class MedianFinder {
+    PriorityQueue<Integer> small = new PriorityQueue<>(Collections.reverseOrder());
+    PriorityQueue<Integer> large = new PriorityQueue<>();
+    boolean even = true;
+    public MedianFinder() {
+        
+    }
+    
+    public void addNum(int num) {
+        if(even){
+            large.offer(num);
+            small.offer(large.poll());
+        } else {
+            small.offer(num);
+            large.offer(small.poll());
+        }
+        even=!even;
+    }
+    
+    public double findMedian() {
+        if(even){
+            return (small.peek()+large.peek())/2.0;
+        } else 
+            return small.peek();
+    }
+}
+
+/**
+ * Your MedianFinder object will be instantiated and called as such:
+ * MedianFinder obj = new MedianFinder();
+ * obj.addNum(num);
+ * double param_2 = obj.findMedian();
+ */
+
+
+
+
+class MedianFinder {
+    PriorityQueue<Integer> maxHeap;
+    PriorityQueue<Integer> minHeap;
+    boolean even = true;
+    public MedianFinder() {
+        maxHeap = new PriorityQueue<>((a, b) -> b - a);
+        minHeap = new PriorityQueue<>();
+    }
+    
+    private void balance() {
+        if (Math.abs(minHeap.size() - maxHeap.size()) > 1) {
+            if (minHeap.size() < maxHeap.size()) {
+                minHeap.add(maxHeap.poll());
+            } else {
+                maxHeap.add(minHeap.poll());
+            }
+        }
+    }
+
+    public void addNum(int num) {
+       if (maxHeap.size() == 0 || num <= maxHeap.peek()) {
+            maxHeap.add(num);
+        } else {
+            minHeap.add(num);
+        }
+        balance();
+    }
+    
+    public double findMedian() {
+        int a = minHeap.size();
+        int b = maxHeap.size();
+        if (a == b) {
+            return (minHeap.peek() + maxHeap.peek()) / 2.0;
+        } else {
+            if (a < b) {
+                return (double)maxHeap.peek();
+            } else {
+                return (double)minHeap.peek();
+            }
+        }
+    }
+}
+
+/**
+ * Your MedianFinder object will be instantiated and called as such:
+ * MedianFinder obj = new MedianFinder();
+ * obj.addNum(num);
+ * double param_2 = obj.findMedian();
+ */
