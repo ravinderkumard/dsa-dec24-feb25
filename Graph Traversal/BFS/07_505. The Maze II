@@ -200,3 +200,40 @@ class Solution {
     }
 }
 
+
+
+
+class Solution {
+    public int shortestDistance(int[][] maze, int[] start, int[] destination) {
+        int rows = maze.length;
+        int cols = maze[0].length;
+        int[][] distance = new int[rows][cols];
+        for(int[] row:distance){
+            Arrays.fill(row,Integer.MAX_VALUE);
+        }
+        distance[start[0]][start[1]] = 0;
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(start);
+        int[][] dirs = {{0,1},{0,-1},{1,0},{-1,0}};
+        while(!queue.isEmpty()){
+            int[] element = queue.poll();
+            for(int[] dir:dirs){
+                int newR = dir[0]+element[0];
+                int newC = dir[1]+element[1];
+                int count=0;
+                while(newR>=0 && newR<rows && newC>=0 && newC<cols && maze[newR][newC]==0){
+                    newR+=dir[0];
+                    newC+=dir[1];
+                    count++;
+                }
+                newR-=dir[0];
+                newC-=dir[1];
+                if(distance[element[0]][element[1]]+count<distance[newR][newC]){
+                    distance[newR][newC] = distance[element[0]][element[1]]+count;
+                    queue.add(new int[]{newR,newC});
+                }
+            }
+        }
+        return distance[destination[0]][destination[1]]==Integer.MAX_VALUE?-1:distance[destination[0]][destination[1]];
+    }
+}
