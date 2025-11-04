@@ -47,3 +47,133 @@ Covert Recursion + Memozation to Tabulation using 2D DP.
 
 As execution of current row depends on previous row so convert 2D dp to 1D dp.
 
+
+
+
+
+class Solution {
+    public boolean canPartition(int[] nums) {
+        int total = 0;
+        for(int num:nums){
+            total+=num;
+        }
+        if(total%2!=0){
+            return false;
+        }
+        int sum = total/2;
+        Boolean[][] cache = new Boolean[nums.length][total+1];
+        if(!backtrack(nums,sum,0,nums.length,cache)){
+            return false;
+        }
+
+        return true;
+    }
+    private boolean backtrack(int[] nums,int sum,int index,int n,Boolean[][] cache){
+        if(index==n && sum==0){
+            return true;
+        }
+        if(index==n||sum<=0){
+            return false;
+        }
+        if(cache[index][sum]!=null){
+            return cache[index][sum];
+        }
+        return cache[index][sum] = backtrack(nums,sum-nums[index],index+1,n,cache) || 
+            backtrack(nums,sum,index+1,n,cache);
+        
+    }
+}
+
+
+
+class Solution {
+    public boolean canPartition(int[] nums) {
+        int total = 0;
+        for(int num:nums){
+            total+=num;
+        }
+        if(total%2!=0){
+            return false;
+        }
+        int sum = total/2;
+        boolean[][] cache = new boolean[nums.length+1][sum+1];
+        int n = nums.length;
+
+        for(int i=0;i<=n;i++){
+            cache[i][0] = true;
+        }
+        for(int i=1;i<=n;i++){
+            for(int j=1;j<=sum;j++){
+                if(j<nums[i-1]){
+                    cache[i][j] = cache[i-1][j];
+                } else {
+                    cache[i][j] = cache[i-1][j]||cache[i-1][j-nums[i-1]];
+                }
+            }
+        }
+        return cache[n][sum];
+    }
+}
+
+
+
+
+
+
+class Solution {
+    public boolean canPartition(int[] nums) {
+        int total = 0;
+        for(int num:nums){
+            total+=num;
+        }
+        if(total%2!=0){
+            return false;
+        }
+        int sum = total/2;
+        boolean[] prev = new boolean[sum+1];
+        
+        int n = nums.length;
+      
+        prev[0] = true;
+        for(int i=1;i<=n;i++){
+            boolean[] curr = new boolean[sum+1];
+            for(int j=1;j<=sum;j++){
+                if(j<nums[i-1]){
+                    curr[j] = prev[j];
+                } else {
+                    curr[j] = prev[j]||prev[j-nums[i-1]];
+                }
+            }
+            prev = curr;
+        }
+        return prev[sum];
+    }
+}
+
+
+
+
+
+public boolean canPartition(int[] nums) {
+        int total = 0;
+        for(int num:nums){
+            total+=num;
+        }
+        if(total%2!=0){
+            return false;
+        }
+        int sum = total/2;
+        boolean[] prev = new boolean[sum+1];
+        
+        int n = nums.length;
+        prev[0] = true;
+        for(int i=0;i<n;i++){
+            for(int j=sum;j>=nums[i];j--){
+                prev[j] = prev[j]||prev[j-nums[i]];
+            }
+        }
+        return prev[sum];
+    }
+
+
+
