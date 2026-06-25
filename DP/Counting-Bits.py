@@ -5,8 +5,10 @@
 5            count = 0
 6            x = i
 7            while x:
-8                x&=x-1
-9                count+=1
-10            print(i,count)
-11            result[i] = count
-12        return result
+8                if result[x]!=0:
+9                    count+=result[x]
+10                    break
+11                x&=x-1
+12                count+=1
+13            result[i] = count
+14        return result
