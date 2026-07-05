@@ -1,7 +1,7 @@
 class Solution:
     def wordBreak(self, s: str, wordDict: List[str]) -> List[str]:
         
-        words = set(wordDict)
+        words = wordDict
         memo = {}
         n = len(s)
 
