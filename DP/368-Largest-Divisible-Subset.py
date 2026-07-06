@@ -2,28 +2,36 @@ class Solution:
     def largestDivisibleSubset(self, nums: List[int]) -> List[int]:
         nums.sort()
         n = len(nums)
-        parent = [-1]*n
-        dp = [1]*n
-        maxLen = 1
-        lastIndex = 0
-
-        for i in range(0,n):
-            for j in range(0,i):
-                if nums[i]%nums[j]==0:
-                    if dp[j]+1>dp[i]:
-                        dp[i] = dp[j]+1
-                        parent[i] = j
+        memo = [[None]*(n+1) for _ in range(n+1)]
+        def solve(curr,prev):
+            if curr == n:
+                return 0
             
-            if dp[i]>maxLen:
-                maxLen = dp[i]
-                lastIndex = i
-        
-        answer = []
-        while lastIndex != -1:
-            answer.append(nums[lastIndex])
-            lastIndex = parent[lastIndex]
-        
-        answer.sort(reverse=True)
+            if memo[curr][prev+1] is not None:
+                return memo[curr][prev+1]
 
-        return answer
+            not_take = solve(curr+1,prev)
+            take = -1
+            if prev == -1 or nums[curr]%nums[prev]==0:
+                take = 1+solve(curr+1,curr)
+            memo[curr][prev+1] = max(take,not_take)
+            return memo[curr][prev+1]
+        
+        solve(0,-1)
+        ans = []
+        curr = 0
+        prev = -1
 
+        while curr < n:
+            take = -1
+            if prev == -1 or nums[curr]%nums[prev] == 0:
+                take = 1+solve(curr+1,curr)
+            
+            skip = solve(curr+1,prev)
+
+            if take >=skip:
+                ans.append(nums[curr])
+                prev = curr
+            curr+=1
+        
+        return ans
