@@ -1,3 +1,5 @@
+
+#https://chatgpt.com/share/6a4c74ef-d73c-83e8-a89b-7be47b392ade
 class Solution:
     def findNumberOfLIS(self, nums: List[int]) -> int:
         n = len(nums)
