@@ -1,15 +1,13 @@
+from bisect import bisect_left
 class Solution:
     def maxEnvelopes(self, envelopes: List[List[int]]) -> int:
         envelopes.sort(key=lambda x: (x[0],-x[1]))
-        n = len(envelopes)
         lis = []
-        
-        for _,h in envelopes:
-            idx = bisect_left(lis,h)
 
-            if idx==len(lis):
+        for _, h in envelopes:
+            idx = bisect_left(lis,h)
+            if idx == len(lis):
                 lis.append(h)
             else:
                 lis[idx] = h
-        
         return len(lis)
