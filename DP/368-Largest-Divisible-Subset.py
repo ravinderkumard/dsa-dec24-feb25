@@ -4,6 +4,7 @@ class Solution:
         n = len(nums)
         ans = []
         cache = [[None]*(n+1) for _ in range(n+1)]
+        choice = [[False]*(n+1) for _ in range(n+1)]
         def solve(curr,prev):
             if curr == n:
                 return 0
@@ -13,8 +14,14 @@ class Solution:
             if prev==-1 or nums[curr]%nums[prev]==0:
                 take = 1+solve(curr+1,curr)
             not_take = solve(curr+1,prev)
-            cache[curr][prev+1] = max(take,not_take)
-            return max(take,not_take)
+            if take>=not_take:
+                choice[curr][prev+1] = True
+                cache[curr][prev+1] = take
+            else:
+                cache[curr][prev+1] = not_take
+
+            
+            return cache[curr][prev+1]
         
         solve(0,-1)
         curr = 0
@@ -24,9 +31,7 @@ class Solution:
             take = -1
             if prev == -1 or nums[curr]%nums[prev]==0:
                 take = 1+solve(curr+1,curr)
-            not_take = solve(curr+1,prev)
-
-            if take>=not_take:
+            if take == cache[curr][prev+1]:
                 ans.append(nums[curr])
                 prev = curr
             curr+=1
