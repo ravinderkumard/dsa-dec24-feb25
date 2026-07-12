@@ -1,21 +1,22 @@
 class Solution:
     def longestPalindromeSubseq(self, s: str) -> int:
+        rev = s[::-1]
         n = len(s)
-        dp = [[None]*n for _ in range(n)]
-        def solve(idx1,idx2):
-            if idx1>idx2:
+
+        dp = [[-1]*n for _ in range(n)]
+
+        def lcs(idx1,idx2):
+            if idx1==n or idx2==n:
                 return 0
-            if idx2==idx1:
-                return 1
-            if dp[idx1][idx2] is not None:
+            
+            if dp[idx1][idx2]!=-1:
                 return dp[idx1][idx2]
-            answer = 0
-            if s[idx1]==s[idx2]:
-                answer = 2+solve(idx1+1,idx2-1)
+            
+            if s[idx1] == rev[idx2]:
+                dp[idx1][idx2] = 1+lcs(idx1+1,idx2+1)
             else:
-                answer = max(solve(idx1+1,idx2),solve(idx1,idx2-1))
-            dp[idx1][idx2] = answer
-            return answer
-
-
-        return solve(0,len(s)-1)
+                dp[idx1][idx2] = max(lcs(idx1+1,idx2),lcs(idx1,idx2+1))
+            
+            return dp[idx1][idx2]
+        
+        return lcs(0,0)
