@@ -3,20 +3,13 @@ class Solution:
         rev = s[::-1]
         n = len(s)
 
-        dp = [[-1]*n for _ in range(n)]
+        dp = [[0]*(n+1) for _ in range(n+1)]
 
-        def lcs(idx1,idx2):
-            if idx1==n or idx2==n:
-                return 0
-            
-            if dp[idx1][idx2]!=-1:
-                return dp[idx1][idx2]
-            
-            if s[idx1] == rev[idx2]:
-                dp[idx1][idx2] = 1+lcs(idx1+1,idx2+1)
-            else:
-                dp[idx1][idx2] = max(lcs(idx1+1,idx2),lcs(idx1,idx2+1))
-            
-            return dp[idx1][idx2]
+        for idx1 in range(n-1,-1,-1):
+            for idx2 in range(n-1,-1,-1):
+                if s[idx1]==rev[idx2]:
+                    dp[idx1][idx2] = 1+dp[idx1+1][idx2+1]
+                else:
+                    dp[idx1][idx2] = max(dp[idx1+1][idx2],dp[idx1][idx2+1])
         
-        return lcs(0,0)
+        return dp[0][0]
