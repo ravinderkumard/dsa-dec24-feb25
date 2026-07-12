@@ -3,13 +3,15 @@ class Solution:
         rev = s[::-1]
         n = len(s)
 
-        dp = [[0]*(n+1) for _ in range(n+1)]
+        next_row = [0]*(n+1)
 
         for idx1 in range(n-1,-1,-1):
+            curr_row = [0]*(n+1)
             for idx2 in range(n-1,-1,-1):
                 if s[idx1]==rev[idx2]:
-                    dp[idx1][idx2] = 1+dp[idx1+1][idx2+1]
+                    curr_row[idx2] = 1+next_row[idx2+1]
                 else:
-                    dp[idx1][idx2] = max(dp[idx1+1][idx2],dp[idx1][idx2+1])
+                    curr_row[idx2] = max(next_row[idx2],curr_row[idx2+1])
+            next_row = curr_row
         
-        return dp[0][0]
+        return next_row[0]
