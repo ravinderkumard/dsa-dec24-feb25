@@ -1,19 +1,19 @@
 class Solution:
     def numDistinct(self, s: str, t: str) -> int:
-        m = len(s)
-        n = len(t)
-        dp = [[0]*(n+1) for _ in range(m+1)]
-
-        for i in range(m+1):
-            dp[i][n] = 1
-
-        for i in range(m-1,-1,-1):
-            for j in range(n-1,-1,-1):
-                if s[i]==t[j]:
-                    ans = dp[i+1][j+1]+dp[i+1][j]
-                else:
-                    ans = dp[i+1][j]
-                
-                dp[i][j] = ans
-        
-        return dp[0][0]
+        n = len(s)
+        m = len(t)
+        dp = [[None]*(m+1) for _ in range(n+1)]
+        def distance(i,j):
+            if j==m:
+                return 1
+            if i==n:
+                return 0
+            if dp[i][j] is not None:
+                return dp[i][j]
+            if s[i]==t[j]:
+                dp[i][j] = distance(i+1,j+1)+distance(i+1,j)
+            else:
+                dp[i][j] = distance(i+1,j)
+            return dp[i][j]
+            
+        return distance(0,0)
