@@ -6,16 +6,10 @@ class Solution:
             return False
         
         target = total//2
-        dp = [[False] * (n+1) for _ in range(target+1)]
+        dp = [False] * (target+1)
+        dp[0] = True
         
-        for i in range(n+1):
-            dp[0][i] = True
-        
-        for i in range(1,n+1):
-            for s in range(1,target+1):
-                if nums[i-1]<=s:
-                    dp[s][i] = dp[s][i-1] or dp[s-nums[i-1]][i-1]
-                else:
-                    dp[s][i] = dp[s][i-1]
-
-        return dp[target][n]
+        for num in nums:
+            for s in range(target,num-1,-1):
+                dp[s] = dp[s] or dp[s-num]
+        return dp[target]
