@@ -6,20 +6,16 @@ class Solution:
             return False
         
         target = total//2
-        memo = [[None] * (n+1) for _ in range(target+1)]
-        def partition(idx,target):
-            if target==0:
-                return True
-            if idx==n:
-                return False
-            if target<0:
-                return False
-            if memo[target][idx] is not None:
-                return memo[target][idx]
+        dp = [[False] * (n+1) for _ in range(target+1)]
+        
+        for i in range(n+1):
+            dp[0][i] = True
+        
+        for i in range(1,n+1):
+            for s in range(1,target+1):
+                if nums[i-1]<=s:
+                    dp[s][i] = dp[s][i-1] or dp[s-nums[i-1]][i-1]
+                else:
+                    dp[s][i] = dp[s][i-1]
 
-            take = partition(idx+1,target-nums[idx])
-            skip = partition(idx+1,target)
-            memo[target][idx] = take or skip
-            return take or skip
-
-        return partition(0,target)
+        return dp[target][n]
