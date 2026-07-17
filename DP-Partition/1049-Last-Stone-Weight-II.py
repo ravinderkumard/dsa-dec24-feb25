@@ -4,13 +4,18 @@ class Solution:
         n = len(stones)
         target = total//2
 
-        dp = [False] * (target+1)
-        dp[0] = True
-
-        for stone in stones:
-            for s in range(target,stone-1,-1):
-                dp[s] = dp[s] or dp[s-stone]
+        dp = [[False]*(n+1) for _ in range(target+1)]
+        for i in range(n+1):
+            dp[0][i] = True
+        
+        for s in range(1,target+1):
+            for i in range(n-1,-1,-1):
+                dp[s][i] = dp[s][i+1]
+                if s>=stones[i]:
+                    dp[s][i] = dp[s][i] | dp[s-stones[i]][i+1]
 
         for s in range(target,-1,-1):
-            if dp[s]:
-                return total -2*s 
+            if dp[s][0]:
+                return total-2*s
+        
+        return 0
