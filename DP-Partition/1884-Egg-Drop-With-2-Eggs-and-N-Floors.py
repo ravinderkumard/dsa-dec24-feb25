@@ -1,13 +1,11 @@
 class Solution:
     def twoEggDrop(self, n: int) -> int:
-        dp = [0] * (n+1)
+        moves = 0
+        covered = 0
+        while covered <n:
+            moves +=1
+            covered+=moves
+            print(moves,covered)
 
-        for floors in range(1,n+1):
-            dp[floors] = float('inf')
-            for x in range(1,floors+1):
-                broken = x-1
-                survive = dp[floors-x]
-                
-                dp[floors] = min(dp[floors],1+max(broken,survive))
         
-        return dp[n]
+        return moves
