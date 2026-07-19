@@ -1,26 +1,13 @@
 class Solution:
     def twoEggDrop(self, n: int) -> int:
-        memo = {}
+        dp = [0] * (n+1)
 
-        def dfs(floors, eggs):
-            if floors <= 1:
-                return floors
-
-            if eggs == 1:
-                return floors
-
-            if (floors,eggs) in memo:
-                return memo[(floors,eggs)]
-
-            ans = float("inf")
-
-            for x in range(1, floors + 1):
-                broken = x - 1
-                survive = dfs(floors - x, eggs)
-
-                ans = min(ans, 1 + max(broken, survive))
+        for floors in range(1,n+1):
+            dp[floors] = float('inf')
+            for x in range(1,floors+1):
+                broken = x-1
+                survive = dp[floors-x]
                 
-            memo[(floors,eggs)] = ans
-            return ans
-
-        return dfs(n, 2)
+                dp[floors] = min(dp[floors],1+max(broken,survive))
+        
+        return dp[n]
