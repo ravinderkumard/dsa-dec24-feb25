@@ -1,6 +1,7 @@
 class Solution:
     def twoEggDrop(self, n: int) -> int:
-        dp = {}
+        dp = [[-1] * 3 for _ in range(n+1)]
+
         def dfs(eggs,floors):
 
             if eggs==1:
@@ -8,26 +9,26 @@ class Solution:
             if floors<=1:
                 return floors
             
-            if (eggs,floors) in dp:
-                return dp[(eggs,floors)]
+            if dp[floors][eggs]!=-1:
+                return dp[floors][eggs]
 
             min_val = float("inf")
             for i in range(1,floors+1):
-                if (eggs-1,i-1) in dp:
-                    low = dp[(eggs-1,i-1)]
+                if dp[i-1][eggs-1]!=-1:
+                    low = dp[i-1][eggs-1]
                 else:
                     low = dfs(eggs-1,i-1)
-                    dp[(eggs-1,i-1)] = low
+                    dp[i-1][eggs-1] = low
                 
-                if (eggs,floors-i) in dp:
-                    high = dp[(eggs,floors-i)]
+                if dp[floors-i][eggs]!=-1:
+                    high = dp[floors-i][eggs]
                 else:
                     high = dfs(eggs,floors-i)
-                    dp[(eggs,floors-i)] = high 
+                    dp[floors-i][eggs] = high 
 
                 temp = 1+max(low,high)
                 min_val = min(min_val,temp)
-            dp[(eggs,floors)] = min_val
+            dp[floors][eggs] = min_val
             return min_val
         
         return dfs(2,n)
