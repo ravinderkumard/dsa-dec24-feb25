@@ -9,18 +9,18 @@ class Solution:
             if eggs == 1:
                 return floors
 
-            if (floors, eggs) in memo:
-                return memo[(floors, eggs)]
+            if (floors,eggs) in memo:
+                return memo[(floors,eggs)]
 
             ans = float("inf")
 
             for x in range(1, floors + 1):
-                broken = dfs(x - 1, eggs - 1)
+                broken = x - 1
                 survive = dfs(floors - x, eggs)
 
                 ans = min(ans, 1 + max(broken, survive))
-
-            memo[(floors, eggs)] = ans
+                
+            memo[(floors,eggs)] = ans
             return ans
 
         return dfs(n, 2)
