@@ -10,17 +10,18 @@ class Node:
 
 class Solution:
     def connect(self, root: 'Optional[Node]') -> 'Optional[Node]':
+        if not root:
+            return None
         
-        def dfs(node):
-            if not node or not node.left:
-                return
-            node.left.next = node.right
-
-            if node.next:
-                node.right.next = node.next.left
+        leftmost = root
+        while leftmost.left:
+            head = leftmost
+            while head:
+                head.left.next = head.right
+                if head.next:
+                    head.right.next = head.next.left
+                head = head.next
             
-            dfs(node.left)
-            dfs(node.right)
+            leftmost = leftmost.left
         
-        dfs(root)
         return root
