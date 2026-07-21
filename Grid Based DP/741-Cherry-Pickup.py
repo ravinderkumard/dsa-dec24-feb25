@@ -1,31 +1,50 @@
 class Solution:
     def cherryPickup(self, grid: List[List[int]]) -> int:
-        rows = len(grid)
-        cols = len(grid[0])
-        dp = {}
-        def dfs(r1,c1,r2):
-            c2 = r1+c1-r2
-            if r1>=rows or c1>=cols or r2>=rows or c2>=cols:
-                return -inf
-            if grid[r1][c1]==-1 or grid[r2][c2]==-1:
-                return -inf
-            
-            if (r1,c1,r2) in dp:
-                return dp[(r1,c1,r2)]
+        n = len(grid)
 
-            if r1==rows-1 and c1==cols-1:
-                return grid[r1][c1]
+        # dp[k][r1][r2]
+        dp = [[[-inf] * n for _ in range(n)] for _ in range(2 * n - 1)]
 
-            cherries = grid[r1][c1]
-            if (r1,c1)!=(r2,c2):
-                cherries+=grid[r2][c2]
-            
-            best = max(dfs(r1+1,c1,r2+1),
-                        dfs(r1+1,c1,r2),
-                        dfs(r1,c1+1,r2+1),
-                        dfs(r1,c1+1,r2))
-            dp[(r1,c1,r2)] = best+cherries
-            return best+cherries
+        dp[0][0][0] = grid[0][0]
 
-    
-        return max(0,dfs(0,0,0))
+        for k in range(1, 2 * n - 1):
+
+            # possible row values at step k
+            for r1 in range(max(0, k - (n - 1)), min(n, k + 1)):
+                c1 = k - r1
+
+                if grid[r1][c1] == -1:
+                    continue
+
+                for r2 in range(max(0, k - (n - 1)), min(n, k + 1)):
+                    c2 = k - r2
+
+                    if grid[r2][c2] == -1:
+                        continue
+
+                    cherries = grid[r1][c1]
+
+                    if r1 != r2:
+                        cherries += grid[r2][c2]
+
+                    best = -inf
+
+                    # both came from left
+                    best = max(best, dp[k - 1][r1][r2])
+
+                    # person1 from up
+                    if r1 > 0:
+                        best = max(best, dp[k - 1][r1 - 1][r2])
+
+                    # person2 from up
+                    if r2 > 0:
+                        best = max(best, dp[k - 1][r1][r2 - 1])
+
+                    # both from up
+                    if r1 > 0 and r2 > 0:
+                        best = max(best, dp[k - 1][r1 - 1][r2 - 1])
+
+                    if best != -inf:
+                        dp[k][r1][r2] = best + cherries
+
+        return max(0, dp[2 * n - 2][n - 1][n - 1])
