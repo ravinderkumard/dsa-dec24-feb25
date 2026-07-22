@@ -18,9 +18,11 @@ class Solution:
 
             if (mask,currSum) in memo:
                 return memo[(mask,currSum)]
-
+            prev = -1
             for i in range(n):
                 if mask & (1<<i):
+                    continue
+                if nums[i]==prev:
                     continue
                 if currSum+nums[i]>target:
                     continue
