@@ -11,24 +11,23 @@ class Solution:
         nums.sort(reverse=True)
         if nums[0]>target:
             return False
+        memo = {}
+        def backtrack(mask,currSum):
+            if mask == (1<<n)-1:
+                return currSum==0
 
-        buckets = [0]*k
+            if (mask,currSum) in memo:
+                return memo[(mask,currSum)]
 
-        def backtrack(idx):
-            if idx==n:
-                return True
-            
-            for i in range(k):
-                if buckets[i]+nums[idx]<=target:
-                    buckets[i]+=nums[idx]
-                    if backtrack(idx+1):
-                        return True
-                    
-                    buckets[i] -= nums[idx]
-                
-                if buckets[i]==0:
-                    break
-            
+            for i in range(n):
+                if mask & (1<<i):
+                    continue
+                if currSum+nums[i]>target:
+                    continue
+                if backtrack(mask|(1<<i),(currSum+nums[i])%target):
+                    memo[(mask,currSum)] = True
+                    return True
+            memo[(mask,currSum)] = False
             return False
 
-        return backtrack(0)
+        return backtrack(0,0)
