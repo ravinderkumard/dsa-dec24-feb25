@@ -7,25 +7,22 @@ class Node:
 """
 
 from typing import Optional
+from collections import deque
 class Solution:
     def cloneGraph(self, node: Optional['Node']) -> Optional['Node']:
         if not node:
             return None
-        old_to_new = {}
+        old_to_new = {node:Node(node.val)}
 
-        def dfs(curr):
-            if curr in old_to_new:
-                return old_to_new[curr]
-            
-            clone = Node(curr.val)
-            old_to_new[curr] = clone
+        queue = deque([node])
+
+        while queue:
+            curr = queue.popleft()
 
             for nei in curr.neighbors:
-                clone.neighbors.append(dfs(nei))
-            
-            return clone
-        return dfs(node)
+                if nei not in old_to_new:
+                    old_to_new[nei] = Node(nei.val)
+                    queue.append(nei)
+                old_to_new[curr].neighbors.append(old_to_new[nei])
         
-        
-
-            
+        return old_to_new[node]
