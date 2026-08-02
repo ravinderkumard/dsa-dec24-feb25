@@ -3,7 +3,7 @@ from typing import List
 class Solution:
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
 
-        graph = defaultdict(list)
+        graph = [[] for _ in range(numCourses)]
         for course,pre_course in prerequisites:
             graph[course].append(pre_course)
 
