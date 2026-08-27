@@ -1,4 +1,5 @@
 class Solution:
+    #Recursion + Memoization
     def mincostTickets(self, days: List[int], costs: List[int]) -> int:
         n = len(days)
         memo = [float('inf')]*n
