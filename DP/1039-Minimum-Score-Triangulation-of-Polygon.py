@@ -1,18 +1,31 @@
 class Solution:
     def minScoreTriangulation(self, values: List[int]) -> int:
         n = len(values)
-        memo = [[-1]*n for _ in range(n)]
+        dp = [[0]*n for _ in range(n)]
 
-        def dfs(i,j):
-            if j-i<2:
-                return 0
-            if memo[i][j] != -1:
-                return memo[i][j]
-            answer = float("inf")
-            for k in range(i+1,j):
-                cost = dfs(i,k)+dfs(k,j)+values[i]*values[k]*values[j]
-                answer = min(cost,answer)
-            memo[i][j] = answer
-            return answer
+        for length in range(3,n+1):
+            for i in range(n-length+1):
+                j = i+length-1
+                dp[i][j] = float("inf")
+
+                for k in range(i+1,j):
+                    cost = (
+                        dp[i][k]+dp[k][j]+values[i]*values[k]*values[j]
+                    )
+                    dp[i][j] = min(dp[i][j],cost)
         
-        return dfs(0,n-1)
+        return dp[0][n-1]
+
+        # def dfs(i,j):
+        #     if j-i<2:
+        #         return 0
+        #     if memo[i][j] != -1:
+        #         return memo[i][j]
+        #     answer = float("inf")
+        #     for k in range(i+1,j):
+        #         cost = dfs(i,k)+dfs(k,j)+values[i]*values[k]*values[j]
+        #         answer = min(cost,answer)
+        #     memo[i][j] = answer
+        #     return answer
+        
+        # return dfs(0,n-1)
