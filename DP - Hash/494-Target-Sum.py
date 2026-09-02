@@ -1,24 +1,20 @@
 class Solution:
     def findTargetSumWays(self, nums: List[int], target: int) -> int:
-        n = len(nums)
         sum_val = sum(nums)
-        if abs(target) > sum_val:
+
+        if abs(target)>sum_val:
             return 0
-        memo = [[-1]*(2*sum_val+1) for _ in range(n+1)]
+        
+        if (target+sum_val) %2!=0:
+            return 0
+        
+        sub_target = (target+sum_val) // 2
 
-        def solve(idx,total):
-            if idx==n:
-                if total == target:
-                    return 1
-                return 0
-            
-            if memo[idx][total+sum_val] != -1:
-                return memo[idx][total+sum_val]
-            
-            addWays = solve(idx+1,total+nums[idx])
+        dp = [0]*(sub_target+1)
+        dp[0] = 1
 
-            subWays = solve(idx+1,total-nums[idx])
-            memo[idx][total+sum_val] = addWays+subWays
-            return addWays+subWays
+        for num in nums:
+            for s in range(sub_target,num-1,-1):
+                dp[s] += dp[s-num]
 
-        return solve(0,0)
+        return dp[sub_target]
