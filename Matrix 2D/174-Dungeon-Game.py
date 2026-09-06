@@ -8,7 +8,7 @@ class Solution:
                 return float("inf")
             
             if i==rows-1 and j==cols-1:
-                return -dungeon[i][j]+1 if dungeon[i][j]<=0 else 1
+                return max(1,1-dungeon[i][j])
             
             if (i,j) in memo:
                 return memo[(i,j)]
@@ -18,7 +18,7 @@ class Solution:
 
             min_health_required = min(if_we_go_right,if_we_go_down) - dungeon[i][j]
 
-            memo[(i,j)] = 1 if min_health_required <=0 else min_health_required
+            memo[(i,j)] = max(1,min_health_required)
             return memo[(i,j)]
 
         return getVal(0,0)
