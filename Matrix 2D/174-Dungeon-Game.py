@@ -2,26 +2,17 @@ class Solution:
     def calculateMinimumHP(self, dungeon: List[List[int]]) -> int:
         rows = len(dungeon)
         cols = len(dungeon[0])
-        memo = [[None]*cols for _ in range(rows)]
-        def getVal(i,j):
-
-            if i==rows or j==cols:
-                return float("inf")
-            
-            if i==rows-1 and j==cols-1:
-                return max(1,1-dungeon[i][j])
-            
-            if memo[i][j] is not None:
-                return memo[i][j]
-
-            right_move = getVal(i,j+1)
-            down_move = getVal(i+1,j)
-
-            next_health = min(right_move,down_move)
-
-            required_health = next_health-dungeon[i][j]
-
-            memo[i][j] = max(1,required_health)
-            return max(1,required_health)
+        INF = float("inf")
+        memo = [[INF]*(cols+1) for _ in range(rows+1)]
         
-        return getVal(0,0)
+        memo[rows][cols-1] = 1
+        
+        memo[rows-1][cols] = 1
+
+        for i in range(rows-1,-1,-1):
+            for j in range(cols-1,-1,-1):
+                next_health = min(memo[i+1][j],memo[i][j+1])
+
+                memo[i][j] = max(1,next_health-dungeon[i][j])
+        
+        return memo[0][0]
