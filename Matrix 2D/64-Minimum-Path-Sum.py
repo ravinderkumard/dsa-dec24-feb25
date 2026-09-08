@@ -3,16 +3,29 @@ class Solution:
         rows = len(grid)
         cols = len(grid[0])
         INF = float("inf")
-        memo = [[INF]*(cols+1) for _ in range(rows+1)]
+        dp = [[0]*(cols+1) for _ in range(rows+1)]
 
-        memo[rows][cols-1] = 0
-        memo[rows-1][cols] = 0
-
-        for i in range(rows-1,-1,-1):
-            for j in range(cols-1,-1,-1):
-                memo[i][j] = grid[i][j] + min(memo[i][j+1],memo[i+1][j])
+        for i in range(rows):
+            for j in range(cols):
+                if i==0 and j==0:
+                    dp[i][j] = grid[i][j]
+                elif i==0:
+                    dp[i][j] = grid[i][j]+dp[i][j-1]
+                elif j==0:
+                    dp[i][j] = grid[i][j]+dp[i-1][j]
+                else:
+                    dp[i][j] = grid[i][j] + min(dp[i-1][j],dp[i][j-1])
         
-        return memo[0][0]
+        return dp[rows-1][cols-1]
+
+        # memo[rows][cols-1] = 0
+        # memo[rows-1][cols] = 0
+
+        # for i in range(rows-1,-1,-1):
+        #     for j in range(cols-1,-1,-1):
+        #         memo[i][j] = grid[i][j] + min(memo[i][j+1],memo[i+1][j])
+        
+        # return memo[0][0]
 
 
 
